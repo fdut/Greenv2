@@ -24,13 +24,14 @@ SMTP setup to facilitate email communication to support “Contact Us” functio
 ## Non-functional requirements
 
 Security:
-Enterprise grade firewalling;
-DDOS protection;
-Availability:
-High Availability of the infrastructure platform;
+- Enterprise grade firewalling;
+- DDOS protection;
+- Availability:
+- High Availability of the infrastructure platform;
+
 Scalability:
-Scalable infrastructure with possible future expansion of the website.
-Infrastructure support for services around DNS mapping and Certificate installation.
+- Scalable infrastructure with possible future expansion of the website.
+- Infrastructure support for services around DNS mapping and Certificate installation.
 
 ## Logical architecture
 
