@@ -34,4 +34,4 @@ Infrastructure support for services around DNS mapping and Certificate installat
 
 ## Logical architecture
 
-![Logical Architecture](arch/logo-160.png)
+![Logical Architecture](arch/LogicalArchitecture.jpg)
