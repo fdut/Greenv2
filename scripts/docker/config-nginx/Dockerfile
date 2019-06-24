@@ -4,6 +4,8 @@ ARG NGINX_VERSION=latest
 
 FROM nginx:${NGINX_VERSION}
 
+LABEL Description="FDUT: Base Image for nginx." Vendor="Greenv2" Version="1.0"
+
 # Set consistent timezone
 ENV CONTAINER_TIMEZONE="UTC"
 RUN rm -f /etc/localtime \

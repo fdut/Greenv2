@@ -2,9 +2,13 @@
 
 ARG NGINX_VERSION=latest
 ARG REGISTRY_NAMESPACE=greenv2-ns
-ARG CR_URL=de.icr.io
+
+#ARG CR_URL=de.icr.io
+ARG CR_URL=uk.icr.io
 
 FROM ${CR_URL}/${REGISTRY_NAMESPACE}/config-nginx:${NGINX_VERSION}
+
+LABEL Description="FDUT: Base nginx image for MVP" Vendor="Greenv2" Version="1.0"
 
 # Allow Composer to be run as root.
 ENV COMPOSER_ALLOW_SUPERUSER 1

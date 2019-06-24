@@ -1,13 +1,17 @@
 ARG PHP_FPM_VERSION=latest
 ARG REGISTRY_NAMESPACE=greenv2-ns
-ARG CR_URL=de.icr.io
+#ARG CR_URL=de.icr.io
+ARG CR_URL=uk.icr.io
 
 FROM ${CR_URL}/${REGISTRY_NAMESPACE}/config-php-fpm:${PHP_FPM_VERSION}
 
 ARG DRUPAL_VERSION
 ARG DRUPAL_MD5
 
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y php7.0-cli php7.0-xml php7.0-gd php7.0-intl php7.0-xsl php7.0-curl php7.0-mbstring zip git
+RUN php -v
+RUN php -i
+
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y zip git
 
 # Register the COMPOSER_HOME environment variable.
 ENV COMPOSER_HOME=/root/.composer
