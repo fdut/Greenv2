@@ -1,0 +1,53 @@
+--- 
+apiVersion: v1
+kind: Service
+metadata: 
+  name: drupal-mysql-service
+  namespace: drupal
+spec: 
+  ports: 
+    - 
+      name: mysql
+      port: 3306
+      protocol: TCP
+  selector: 
+    app: drupal-mysql
+--- 
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: drupal-mysql
+  namespace: drupal
+spec: 
+  replicas: 1
+  template: 
+    metadata: 
+      labels: 
+        app: drupal-mysql
+    spec: 
+      containers: 
+        - 
+          env: 
+            - 
+              name: MYSQL_ROOT_PASSWORD
+              value: m1+s@lpwd
+            - 
+              name: MYSQL_DATABASE
+              value: drupal-database
+          image: "mysql:5.7"
+          name: cont-drupal-mysql
+          ports: 
+            - 
+              containerPort: 3306
+              name: mysql
+              protocol: TCP
+          volumeMounts: 
+            - 
+              mountPath: /var/lib/mysql
+              name: vol-drupal
+              subPath: dbdata
+      volumes: 
+        - 
+          name: vol-drupal
+          persistentVolumeClaim: 
+            claimName: drupal-pvc-mysql

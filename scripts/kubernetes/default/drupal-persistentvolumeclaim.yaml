@@ -1,0 +1,26 @@
+--- 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: 
+  name: drupal-pvc
+  namespace: drupal
+spec: 
+  storageClassName: ibmc-file-bronze
+  accessModes: 
+    - ReadWriteOnce
+  resources: 
+    requests: 
+      storage: 5Gi
+--- 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: 
+  name: drupal-pvc-mysql
+  namespace: drupal
+spec: 
+  storageClassName: ibmc-file-bronze
+  accessModes: 
+    - ReadWriteOnce
+  resources: 
+    requests: 
+      storage: 5Gi

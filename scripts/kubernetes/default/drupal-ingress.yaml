@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: drupal-ingress
+  namespace: drupal
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: drupal.159.8.90.132.nip.io
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: drupal-service
+            servicePort: 80

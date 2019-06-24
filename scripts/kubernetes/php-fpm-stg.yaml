@@ -1,0 +1,143 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-fpm-stg
+spec:
+  ports:
+    -
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+  selector:
+    app: php-fpm-stg
+    tier: backend
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: php-fpm-stg
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: php-fpm-stg
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        -
+          env:
+            -
+              name: BUILD_TIME
+              value: 'REPLACE_AT_BUILD_TIME'
+            -
+              name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_USER_STG
+                  name: service-credentials
+            -
+              name: MYSQL_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_PASS_STG
+                  name: service-credentials
+            -
+              name: MYSQL_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_HOST_STG
+                  name: service-credentials
+            -
+              name: MYSQL_PORT
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_PORT_STG
+                  name: service-credentials
+            -
+              name: MYSQL_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_NAME_STG
+                  name: service-credentials
+            -
+              name: REDIS_USER
+              valueFrom:
+                secretKeyRef:
+                  key: REDIS_USER_STG
+                  name: service-credentials
+            -
+              name: REDIS_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: REDIS_PASS_STG
+                  name: service-credentials
+            -
+              name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: REDIS_HOST_STG
+                  name: service-credentials
+            -
+              name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  key: REDIS_PORT_STG
+                  name: service-credentials
+            -
+              name: MEMCACHED_USER
+              valueFrom:
+                secretKeyRef:
+                  key: MEMCACHED_USER_STG
+                  name: service-credentials
+            -
+              name: MEMCACHED_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: MEMCACHED_PASS_STG
+                  name: service-credentials
+            -
+              name: MEMCACHED_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: MEMCACHED_HOST_STG
+                  name: service-credentials
+            -
+              name: MEMCACHED_PORT
+              valueFrom:
+                secretKeyRef:
+                  key: MEMCACHED_PORT_STG
+                  name: service-credentials
+            -
+              name: HASH_SALT
+              valueFrom:
+                secretKeyRef:
+                  key: HASH_SALT
+                  name: service-credentials
+          image: "uk.icr.io/greenv2-ns/code-php-fpm:latest"
+          name: php-fpm-stg
+          imagePullPolicy: Always # Set to IfNotPresent to improve performance at the expense of caching.
+          ports:
+            -
+              containerPort: 9000
+              name: fastcgi
+          volumeMounts:
+            -
+              mountPath: /var/www/drupal/web/sites/default/files
+              name: sites-local-storage
+              readOnly: false
+      imagePullSecrets:
+        -
+          name: image-pull
+      volumes:
+        -
+          name: sites-local-storage
+          persistentVolumeClaim:
+            claimName: sites-stg-lv-claim

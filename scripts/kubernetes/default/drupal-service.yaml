@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: drupal-service
+  namespace: drupal
+spec:
+  selector:
+    app: drupal
+  ports:
+    - port: 80 # Default port for image
