@@ -39,9 +39,9 @@ case "$IMAGE" in
     fi
     mkdir tmp
     cp -R ../../../code/* tmp/
-    bx cr build \
-      --tag registry.ng.bluemix.net/${REGISTRY_NAMESPACE}/code-nginx:${BUILD_NUMBER} \
-      --tag registry.ng.bluemix.net/${REGISTRY_NAMESPACE}/code-nginx:latest \
+    ibmcloud cr build \
+      --tag ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/code-nginx:${BUILD_NUMBER} \
+      --tag ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/code-nginx:latest \
       --build-arg REGISTRY_NAMESPACE=${REGISTRY_NAMESPACE} \
       .
     # --no-cache \
@@ -62,9 +62,9 @@ case "$IMAGE" in
     mkdir tmp
     cp -R ../../../code/* tmp/
 
-    bx cr build \
-      --tag registry.ng.bluemix.net/${REGISTRY_NAMESPACE}/code-php-fpm:${BUILD_NUMBER} \
-      --tag registry.ng.bluemix.net/${REGISTRY_NAMESPACE}/code-php-fpm:latest \
+    ibmcloud cr build \
+      --tag ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/code-php-fpm:${BUILD_NUMBER} \
+      --tag ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/code-php-fpm:latest \
       --build-arg DRUPAL_MD5=${DRUPAL_MD5} \
       --build-arg DRUPAL_VERSION=${DRUPAL_VERSION} \
       --build-arg REGISTRY_NAMESPACE=${REGISTRY_NAMESPACE} \
@@ -86,9 +86,9 @@ case "$IMAGE" in
     mkdir tmp
     cp -R ../../../code/* tmp/
 
-    bx cr build \
-      --tag registry.ng.bluemix.net/${REGISTRY_NAMESPACE}/code-php-cli:${BUILD_NUMBER} \
-      --tag registry.ng.bluemix.net/${REGISTRY_NAMESPACE}/code-php-cli:latest \
+    ibmcloud cr build \
+      --tag ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/code-php-cli:${BUILD_NUMBER} \
+      --tag ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/code-php-cli:latest \
       --build-arg DRUSH_VERSION=${DRUSH_VERSION} \
       --build-arg REGISTRY_NAMESPACE=${REGISTRY_NAMESPACE} \
       .
