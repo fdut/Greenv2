@@ -1,6 +1,5 @@
 ARG PHP_CLI_VERSION=latest
 ARG REGISTRY_NAMESPACE=greenv2-ns
-#ARG CR_URL=de.icr.io
 ARG CR_URL=uk.icr.io
 
 FROM ${CR_URL}/${REGISTRY_NAMESPACE}/config-php-cli:${PHP_CLI_VERSION}
@@ -8,6 +7,8 @@ FROM ${CR_URL}/${REGISTRY_NAMESPACE}/config-php-cli:${PHP_CLI_VERSION}
 LABEL Description="FDUT: Base php-cli image for MVP" Vendor="Greenv2" Version="1.0"
 
 ARG DRUSH_VERSION
+
+RUN echo "Using this Registry url:  $CR_URL"
 
 RUN apt-get update -y && apt-get upgrade -y
 

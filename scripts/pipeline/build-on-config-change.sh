@@ -12,25 +12,36 @@ set +o allexport
 echo $NGINX_VERSION
 echo $PHP_FPM_VERSION
 echo $PHP_CLI_VERSION
+echo $CLUSTER_REGISTRY_NAMESPACE
+echo $CLUSTER_REGISTRY_URL
 
 # Build each image and push
 ROOT_DIR=`pwd`
 
+# registry on cloud.ibm.com
+REGISTRY_NAMESPACE=$CLUSTER_REGISTRY_NAMESPACE
+
+# registry url on cloud.ibm.com
+REGISTRY_URL=$CLUSTER_REGISTRY_URL
+
+echo "CR_CRL: $REGISTRY_URL"
+
 # Log into the IBM Cloud Container Registry
-bx cr login
+#ibmcloud cr login
 
 # Purge all existing images
-# bx cr image-rm $(bx cr images -q)
+#ibmcloud cr image-rm $(ibmcloud cr images -q)
 
 # Build the NGINX image (configure Fast CGI)
 cd ../docker/config-nginx
 docker build \
-  --tag registry.ng.bluemix.net/orod/config-nginx:${NGINX_VERSION} \
-  --tag registry.ng.bluemix.net/orod/config-nginx:latest \
+  --tag $REGISTRY_URL/$REGISTRY_NAMESPACE/config-nginx:${NGINX_VERSION} \
+  --tag $REGISTRY_URL/$REGISTRY_NAMESPACE/config-nginx:latest \
   --build-arg NGINX_VERSION=${NGINX_VERSION} \
+  --build-arg CR_URL=${REGISTRY_URL} \
   .
 # --no-cache \
-docker push registry.ng.bluemix.net/orod/config-nginx:latest
+docker push $REGISTRY_URL/$REGISTRY_NAMESPACE/config-nginx:latest
 
 # Move back to ROOT_DIR
 cd $ROOT_DIR
@@ -38,11 +49,12 @@ cd $ROOT_DIR
 # Build the PHP-FPM image (base image, inject code, run composer)
 cd ../docker/config-php-fpm
 docker build \
-  --tag registry.ng.bluemix.net/orod/config-php-fpm:${PHP_FPM_VERSION} \
-  --tag registry.ng.bluemix.net/orod/config-php-fpm:latest \
+  --tag $REGISTRY_URL/$REGISTRY_NAMESPACE/config-php-fpm:${PHP_FPM_VERSION} \
+  --tag $REGISTRY_URL/$REGISTRY_NAMESPACE/config-php-fpm:latest \
   --build-arg PHP_FPM_VERSION=${PHP_FPM_VERSION} \
+  --build-arg CR_URL=${REGISTRY_URL} \
   .
-docker push registry.ng.bluemix.net/orod/config-php-fpm:latest
+docker push $REGISTRY_URL/$REGISTRY_NAMESPACE/config-php-fpm:latest
 
 # Move back to ROOT_DIR
 cd $ROOT_DIR
@@ -50,11 +62,12 @@ cd $ROOT_DIR
 # Build the PHP-FPM image (base image, inject code, run composer)
 cd ../docker/config-php-cli
 docker build \
-  --tag registry.ng.bluemix.net/orod/config-php-cli:${PHP_CLI_VERSION} \
-  --tag registry.ng.bluemix.net/orod/config-php-cli:latest \
+  --tag $REGISTRY_URL/$REGISTRY_NAMESPACE/config-php-cli:${PHP_CLI_VERSION} \
+  --tag $REGISTRY_URL/$REGISTRY_NAMESPACE/config-php-cli:latest \
   --build-arg PHP_CLI_VERSION=${PHP_CLI_VERSION} \
+  --build-arg CR_URL=${REGISTRY_URL} \
   .
-docker push registry.ng.bluemix.net/orod/config-php-cli:latest
+docker push $REGISTRY_URL/$REGISTRY_NAMESPACE/config-php-cli:latest
 # Move back to ROOT_DIR
 cd $ROOT_DIR
 

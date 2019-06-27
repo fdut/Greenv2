@@ -2,13 +2,13 @@
 
 ARG NGINX_VERSION=latest
 ARG REGISTRY_NAMESPACE=greenv2-ns
-
-#ARG CR_URL=de.icr.io
 ARG CR_URL=uk.icr.io
 
 FROM ${CR_URL}/${REGISTRY_NAMESPACE}/config-nginx:${NGINX_VERSION}
 
 LABEL Description="FDUT: Base nginx image for MVP" Vendor="Greenv2" Version="1.0"
+
+RUN echo "Using this Registry url:  $CR_URL"
 
 # Allow Composer to be run as root.
 ENV COMPOSER_ALLOW_SUPERUSER 1
@@ -21,8 +21,6 @@ RUN apt-get update -y && apt-get upgrade -y && apt-get install -y php7.0-cli php
 RUN curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/bin/ --filename=composer
 
-RUN echo pwd: `pwd` && echo ls: `ls`
-
 COPY tmp/composer.json ./
 
 # COPY tmp/composer.lock ./
@@ -33,11 +31,11 @@ COPY . ./
 
 RUN composer create-project drupal-composer/drupal-project:8.x-dev /var/www/drupal/ --no-interaction
 
-#ADD tmp/modules/ /var/www/drupal/web/modules/
-#ADD tmp/profiles/ /var/www/drupal/web/profiles/
-#ADD tmp/sites/ /var/www/drupal/web/sites/
-#ADD tmp/themes/ /var/www/drupal/web/themes/
-#ADD tmp/config/ /var/www/drupal/config/
+ADD tmp/modules/ /var/www/drupal/web/modules/
+ADD tmp/profiles/ /var/www/drupal/web/profiles/
+ADD tmp/sites/ /var/www/drupal/web/sites/
+ADD tmp/themes/ /var/www/drupal/web/themes/
+ADD tmp/config/ /var/www/drupal/config/
 
 # --- We do the above to add static files, but we should look at an alternative approach.
 

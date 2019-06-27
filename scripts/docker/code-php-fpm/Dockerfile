@@ -1,6 +1,5 @@
 ARG PHP_FPM_VERSION=latest
 ARG REGISTRY_NAMESPACE=greenv2-ns
-#ARG CR_URL=de.icr.io
 ARG CR_URL=uk.icr.io
 
 FROM ${CR_URL}/${REGISTRY_NAMESPACE}/config-php-fpm:${PHP_FPM_VERSION}
@@ -8,8 +7,10 @@ FROM ${CR_URL}/${REGISTRY_NAMESPACE}/config-php-fpm:${PHP_FPM_VERSION}
 ARG DRUPAL_VERSION
 ARG DRUPAL_MD5
 
-RUN php -v
-RUN php -i
+RUN echo "Using this Registry url:  $CR_URL"
+
+#RUN php -v
+#RUN php -i
 
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y zip git
 
@@ -25,11 +26,11 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/bin/ --filename=composer
 
-#COPY tmp/composer.json ./
+COPY tmp/composer.json ./
 
 # COPY tmp/composer.lock ./
 
-#RUN composer install --no-scripts --no-autoloader
+RUN composer install --no-scripts --no-autoloader
 
 COPY . ./
 
@@ -42,17 +43,17 @@ RUN composer create-project drupal-composer/drupal-project:${DRUPAL_VERSION} /va
 #   vi composer.json to customize
 #   composer install
 
-#ADD tmp/composer.json /var/www/drupal/
-#ADD tmp/composer.lock /var/www/drupal/
+ADD tmp/composer.json /var/www/drupal/
+ADD tmp/composer.lock /var/www/drupal/
 
-#ADD tmp/drush/ /var/www/drupal/drush/
-#RUN chmod +x /var/www/drupal/drush/*.sh
+ADD tmp/drush/ /var/www/drupal/drush/
+RUN chmod +x /var/www/drupal/drush/*.sh
 
-#ADD tmp/modules/ /var/www/drupal/web/modules/
-#ADD tmp/profiles/ /var/www/drupal/web/profiles/
-#ADD tmp/sites/ /var/www/drupal/web/sites/
-#ADD tmp/themes/ /var/www/drupal/web/themes/
-#ADD tmp/config/ /var/www/drupal/config/
+ADD tmp/modules/ /var/www/drupal/web/modules/
+ADD tmp/profiles/ /var/www/drupal/web/profiles/
+ADD tmp/sites/ /var/www/drupal/web/sites/
+ADD tmp/themes/ /var/www/drupal/web/themes/
+ADD tmp/config/ /var/www/drupal/config/
 
 # One way to do the initial setup.
 # cd /var/www/drupal/web

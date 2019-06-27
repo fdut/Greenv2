@@ -5,7 +5,6 @@ ROOT_DIR=`pwd`
 
 REGISTRY_NAMESPACE=greenv2-ns
 
-#!/bin/sh
 CR_URL="$1"
 if [ -z "$CR_URL" ] 
 then
