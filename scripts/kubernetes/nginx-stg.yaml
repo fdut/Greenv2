@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: nginx-stg
 spec:
-  loadBalancerIP: xxx.xxx.xxx.xxx # Change to public from kubectl get cm ibm-cloud-provider-vlan-ip-config -n kube-system -o yaml
+  #loadBalancerIP: xxx.xxx.xxx.xxx # Change to public from kubectl get cm ibm-cloud-provider-vlan-ip-config -n kube-system -o yaml
   ports:
     -
       port: 80
@@ -38,11 +38,11 @@ spec:
           env:
             -
               name: BUILD_TIME
-              value: 'REPLACE_AT_BUILD_TIME'
+              value: '2706'
             -
               name: ENV
               value: "stg"
-          image: "registry.ng.bluemix.net/orod/code-nginx:latest"
+          image: "uk.icr.io/greenv2-ns/code-nginx:latest"
           lifecycle:
             preStop:
               exec:
