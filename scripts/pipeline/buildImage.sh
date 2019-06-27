@@ -14,17 +14,18 @@ echo `git log -m -1 --name-only`
 
 # Check for mentions of the config and docker directories in the last commit.
 if [ `git log -m -1 --name-only | grep "config/"` ] || [ `git log -m -1 --name-only | grep "docker/"` ] ; then
-  echo "Changes found in config/ or docker/ directory"
+  echo "-- Changes found in config/ or docker/ directory"
   # Call the build-on-config-change.sh script
   . ./pipeline-build-on-config-change.sh
   . ./pipeline-build-on-code-change.sh
 # Check for changes to the /code directory in the last commit.
 elif git log -m -1 --name-only | grep "code/" ; then
-  echo "Changes found in code/ directory"
+  echo "-- Changes found in code/ directory"
   # Call the build-on-code-change.sh script
   . ./pipeline-build-on-code-change.sh
 fi
 
+echo "-- END of Build"
 # Pass kubernetes files along with build artifacts
 cp -r ../kubernetes/ $ARCHIVE_DIR
 
