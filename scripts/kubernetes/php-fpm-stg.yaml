@@ -5,8 +5,7 @@ metadata:
   name: php-fpm-stg
 spec:
   ports:
-    -
-      port: 9000
+    - port: 9000
       protocol: TCP
       targetPort: 9000
   selector:
