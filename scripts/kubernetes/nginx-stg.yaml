@@ -19,6 +19,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: nginx-stg
+  namespace: greenv2
 spec:
   replicas: 1
   strategy:
