@@ -6,12 +6,13 @@ metadata:
   namespace: greenv2
 spec:
   #loadBalancerIP: xxx.xxx.xxx.xxx # Change to public from kubectl get cm ibm-cloud-provider-vlan-ip-config -n kube-system -o yaml
+  loadBalancerIP: 169.50.91.114
   ports:
     - port: 80
       protocol: TCP
       targetPort: 80
   selector:
-    app: nginx-stg
+    app: nginx
     tier: frontend
   type: LoadBalancer
 ---
@@ -30,7 +31,7 @@ spec:
   template:
     metadata:
       labels:
-        app: nginx-stg
+        app: nginx
         tier: frontend
         track: stable
     spec:
@@ -39,7 +40,7 @@ spec:
             - name: BUILD_TIME
               value: '2706'
             - name: ENV
-              value: "stg"
+              value: "prod"
           image: "uk.icr.io/greenv2-ns/code-nginx:latest"
           lifecycle:
             preStop:
