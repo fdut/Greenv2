@@ -2,7 +2,6 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: greenv2
   name: php-cli
 spec:
   replicas: 1

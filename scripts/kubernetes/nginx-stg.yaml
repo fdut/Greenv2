@@ -2,8 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
-  namespace: greenv2
+  name: nginx-stg
 spec:
   #loadBalancerIP: xxx.xxx.xxx.xxx # Change to public from kubectl get cm ibm-cloud-provider-vlan-ip-config -n kube-system -o yaml
   ports:
@@ -19,7 +18,8 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: nginx-stg
-  namespace: greenv2
+  labels:
+    app: nginx-stg
 spec:
   replicas: 1
   strategy:
