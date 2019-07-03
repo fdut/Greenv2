@@ -53,7 +53,7 @@ cp build.properties ${ARCHIVE_DIR}/ || :
 cp -r ../kubernetes/ ${ARCHIVE_DIR}
 
 echo -e "Copying artifacts needed for deployment and testing"
-
+pwd
 ls -l
 echo -e "ls -l"
 ls -l ${ARCHIVE_DIR}
