@@ -40,7 +40,7 @@ spec:
               value: '2706'
             - name: ENV
               value: "stg"
-          image: "uk.icr.io/greenv2-ns/code-nginx"
+          image: "uk.icr.io/greenv2-ns/code-nginx:latest"
           lifecycle:
             preStop:
               exec:
