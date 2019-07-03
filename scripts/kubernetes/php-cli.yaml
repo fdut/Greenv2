@@ -168,7 +168,7 @@ spec:
               name: sites-prd-local-storage
               readOnly: false
       imagePullSecrets:
-        - name: image-pull
+        - name: default-uk-icr-io
       volumes:
         - name: sites-stg-local-storage
           persistentVolumeClaim:
