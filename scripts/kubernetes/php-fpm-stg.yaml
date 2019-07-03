@@ -116,7 +116,7 @@ spec:
               name: sites-local-storage
               readOnly: false
       imagePullSecrets:
-        - name: image-pull
+        - name: default-uk-icr-io
       volumes:
         - name: sites-local-storage
           persistentVolumeClaim:
