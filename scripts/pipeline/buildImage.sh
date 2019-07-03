@@ -54,6 +54,8 @@ cp -r ../kubernetes/ ${ARCHIVE_DIR}
 
 echo -e "Copying artifacts needed for deployment and testing"
 
+ls -l
+
 echo -e "Save the registry url and namespace in the build artifacts to be used in deploy stage."
 echo "REGISTRY_URL=${REGISTRY_URL}" >> ${ARCHIVE_DIR}/build.properties
 echo "REGISTRY_NAMESPACE=${REGISTRY_NAMESPACE}" >> ${ARCHIVE_DIR}/build.properties
