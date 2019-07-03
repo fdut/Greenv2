@@ -16,7 +16,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: php-fpm-stg
-  namespace: greenv2
+  namespace: default
 spec:
   replicas: 1
   strategy:
