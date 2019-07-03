@@ -65,4 +65,7 @@ echo "IMAGE=${IMAGE}" >> ${ARCHIVE_DIR}/build.properties
 
 # IMAGE_NAME from build.properties is used by Vulnerability Advisor job to reference the image qualified location in registry
 echo "IMAGE_NAME=${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${IMAGE}:latest" >> ${ARCHIVE_DIR}/build.properties
+echo "File 'build.properties' created for passing env variables to subsequent pipeline jobs:"
+cat $ARCHIVE_DIR/build.properties
+
 echo -e "-- END of script --"
