@@ -57,7 +57,7 @@ spec:
             - mountPath: /var/www/drupal/web/sites/default/files
               name: sites-local-storage
       imagePullSecrets:
-        - name: image-pull
+        - name: default-uk-icr-io
       volumes:
         - name: sites-local-storage
           persistentVolumeClaim:
