@@ -156,7 +156,8 @@ spec:
                 secretKeyRef:
                   key: MEMCACHED_PORT_PRD
                   name: service-credentials
-          image: "registry.ng.bluemix.net/orod/code-php-cli:latest"
+          #image: "registry.ng.bluemix.net/orod/code-php-cli:latest"
+          image: "uk.icr.io/greenv2-ns/code-php-cli:latest"
           imagePullPolicy: Always
           name: php-cli
           volumeMounts:
