@@ -47,17 +47,17 @@ fi
 # will be able to reuse the env variables in their job shell scripts.
 
 # If already defined build.properties from prior build job, append to it.
-cp build.properties $ARCHIVE_DIR/ || :
+cp build.properties ${ARCHIVE_DIR}/ || :
 
 # Pass kubernetes files along with build artifacts
-cp -r ../kubernetes/ $ARCHIVE_DIR
+cp -r ../kubernetes/ ${ARCHIVE_DIR}
 
 echo -e "Copying artifacts needed for deployment and testing"
 
 # Save the registry url and namespace in the build artifacts to be used in deploy stage.
-echo "REGISTRY_URL=${REGISTRY_URL}" >> $ARCHIVE_DIR/build.properties
-echo "REGISTRY_NAMESPACE=${REGISTRY_NAMESPACE}" >> $ARCHIVE_DIR/build.properties
-echo "IMAGE=${IMAGE}" >> $ARCHIVE_DIR/build.properties
+echo "REGISTRY_URL=${REGISTRY_URL}" >> ${ARCHIVE_DIR}/build.properties
+echo "REGISTRY_NAMESPACE=${REGISTRY_NAMESPACE}" >> ${ARCHIVE_DIR}/build.properties
+echo "IMAGE=${IMAGE}" >> ${ARCHIVE_DIR}/build.properties
 
 # IMAGE_NAME from build.properties is used by Vulnerability Advisor job to reference the image qualified location in registry
-echo "IMAGE_NAME=${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${IMAGE}:latest" >> $ARCHIVE_DIR/build.properties
+echo "IMAGE_NAME=${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${IMAGE}:latest" >> ${ARCHIVE_DIR}/build.properties
