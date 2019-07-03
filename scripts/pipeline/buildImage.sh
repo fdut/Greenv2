@@ -26,6 +26,29 @@ elif git log -m -1 --name-only | grep "code/" ; then
 fi
 
 echo "-- END of Build"
+
+######################################################################################
+# Copy any artifacts that will be needed for deployment and testing to $WORKSPACE    #
+######################################################################################
+echo "=========================================================="
+echo "COPYING ARTIFACTS needed for deployment and testing (in particular build.properties)"
+
+echo "Checking archive dir presence"
+if [ -z "${ARCHIVE_DIR}" ]; then
+  echo -e "Build archive directory contains entire working directory."
+else
+  echo -e "Copying working dir into build archive directory: ${ARCHIVE_DIR} "
+  mkdir -p ${ARCHIVE_DIR}
+  find . -mindepth 1 -maxdepth 1 -not -path "./$ARCHIVE_DIR" -exec cp -R '{}' "${ARCHIVE_DIR}/" ';'
+fi
+
+# Persist env variables into a properties file (build.properties) so that all pipeline stages consuming this
+# build as input and configured with an environment properties file valued 'build.properties'
+# will be able to reuse the env variables in their job shell scripts.
+
+# If already defined build.properties from prior build job, append to it.
+cp build.properties $ARCHIVE_DIR/ || :
+
 # Pass kubernetes files along with build artifacts
 cp -r ../kubernetes/ $ARCHIVE_DIR
 
