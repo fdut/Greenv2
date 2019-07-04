@@ -1,0 +1,259 @@
+https://cloud.ibm.com/devops/pipelines/583b6d2a-d612-4565-8efd-41a05e355352/yaml?env_id=ibm:yp:eu-gb
+---
+defaultBaseImageVersion: '1.0'
+properties: []
+stages:
+- name: Build image
+  inputs:
+  - url: https://github.ibm.com/frederic-dutheil/Greenv2.git
+    type: git
+    branch: master
+    dir_name: null
+  permission:
+    execute: TOOLCHAIN_ADMINS
+  properties:
+  - name: DOCKER_ROOT
+    value: .
+    type: text
+  - name: DOCKER_FILE
+    value: Dockerfile
+    type: text
+  jobs:
+  - name: Build Image
+    type: builder
+    curatedDockerImage: default
+    artifact_dir: output
+    build_type: cr
+    script: |+
+      #!/bin/bash
+      echo -e "Build environment variables:"
+      echo "REGISTRY_URL=${REGISTRY_URL}"
+      echo "REGISTRY_NAMESPACE=${REGISTRY_NAMESPACE}"
+      echo "IMAGE_NAME=${IMAGE_NAME}"
+      echo "BUILD_NUMBER=${BUILD_NUMBER}"
+      echo "ARCHIVE_DIR=${ARCHIVE_DIR}"
+
+      ROOTPWD=`pwd`
+      cd scripts/pipeline
+      ./buildImage.sh
+      cd $ROOTPWD
+      cp -r scripts/pipeline/${ARCHIVE_DIR} .
+
+    namespace: greenv2-ns
+    image_name: php-fpm
+    target:
+      region_id: ibm:yp:eu-gb
+      api_key: 0KItg9dwrZelq4PuK0168547crqnZ/uz71DYpjn5P5R4sk3RgqPt9pwgMVl5I4VVQivgI3QCx+70jKTkn0K4zQ==
+      account_guid: 33a4cb55663176ec2246be860bf4fafc
+- name: STG
+  inputs:
+  - type: job
+    stage: Build image
+    job: Build Image
+    dir_name: null
+  triggers:
+  - type: stage
+  permission:
+    execute: TOOLCHAIN_MEMBERS
+  properties:
+  - name: CLUSTER_NAMESPACE
+    value: default
+    type: text
+  - name: DEPLOYMENT_FILE
+    value: kubernetes/php-fpm-stg.yaml
+    type: text
+  - name: buildprops
+    value: build.properties
+    type: file
+  - name: DEPLOYMENT_NAME
+    value: php-fpm-stg
+    type: text
+  jobs:
+  - name: Pre-deploy check
+    type: deployer
+    curatedDockerImage: latest
+    deploy_type: kubernetes
+    target:
+      region_id: ibm:yp:eu-gb
+      api_key: 0KItg9dwrZelq4PuK0168547crqnZ/uz71DYpjn5P5R4sk3RgqPt9pwgMVl5I4VVQivgI3QCx+70jKTkn0K4zQ==
+      account_guid: 33a4cb55663176ec2246be860bf4fafc
+      resource_group: default
+      kubernetes_cluster: Greenv2
+    script: "#!/bin/bash\n# uncomment to debug the script\n#set -x\n# copy the script\
+      \ below into your app code repo (e.g. ./scripts/check_predeploy.sh) and 'source'\
+      \ it from your pipeline job\n#    source ./scripts/check_predeploy_kubectl.sh\n\
+      # alternatively, you can source it from online script:\n#    source <(curl -sSL\
+      \ \"https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_predeploy_kubectl.sh\"\
+      )\n# ------------------\n# source: https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_predeploy_kubectl.sh\n\
+      \n# This script checks the IBM Cloud Kubernetes Service cluster is ready, has\
+      \ a namespace configured with access to the private\n# image registry (using\
+      \ an IBM Cloud API Key). It also configures Helm Tiller service to later perform\
+      \ a deploy with Helm.\n\n# Input env variables (can be received via a pipeline\
+      \ environment properties.file.\necho \"IMAGE_NAME=${IMAGE_NAME}\"\necho \"IMAGE_TAG=${IMAGE_TAG}\"\
+      \necho \"REGISTRY_URL=${REGISTRY_URL}\"\necho \"REGISTRY_NAMESPACE=${REGISTRY_NAMESPACE}\"\
+      \n\n# View build properties\nif [ -f build.properties ]; then \n  echo \"build.properties:\"\
+      \n  cat build.properties\nelse \n  echo \"build.properties : not found\"\nfi\
+      \ \n# also run 'env' command to find all available env variables\n# or learn\
+      \ more about the available environment variables at:\n# https://console.bluemix.net/docs/services/ContinuousDelivery/pipeline_deploy_var.html#deliverypipeline_environment\n\
+      \n# Input env variables from pipeline job\necho \"PIPELINE_KUBERNETES_CLUSTER_NAME=${PIPELINE_KUBERNETES_CLUSTER_NAME}\"\
+      \necho \"CLUSTER_NAMESPACE=${CLUSTER_NAMESPACE}\"\n\necho \"==========================================================\"\
+      \necho \"CHECKING DEPLOYMENT.YML manifest\"\n#Update deployment.yml with image\
+      \ name\nif [ -z \"${DEPLOYMENT_FILE}\" ]; then DEPLOYMENT_FILE=deployment.yml\
+      \ ; fi\nif [ ! -f ${DEPLOYMENT_FILE} ]; then\n    echo -e \"${red}Kubernetes\
+      \ deployment file '${DEPLOYMENT_FILE}' not found${no_color}\"\n    exit 1\n\
+      fi\n\n#Check cluster availability\necho \"==========================================================\"\
+      \necho \"CHECKING CLUSTER readiness and namespace existence\"\nIP_ADDR=$( bx\
+      \ cs workers ${PIPELINE_KUBERNETES_CLUSTER_NAME} | grep normal | awk '{ print\
+      \ $2 }' )\nif [ -z \"${IP_ADDR}\" ]; then\n  echo -e \"${PIPELINE_KUBERNETES_CLUSTER_NAME}\
+      \ not created or workers not ready\"\n  exit 1\nfi\necho \"Configuring cluster\
+      \ namespace\"\nif kubectl get namespace ${CLUSTER_NAMESPACE}; then\n  echo -e\
+      \ \"Namespace ${CLUSTER_NAMESPACE} found.\"\nelse\n  kubectl create namespace\
+      \ ${CLUSTER_NAMESPACE}\n  echo -e \"Namespace ${CLUSTER_NAMESPACE} created.\"\
+      \nfi\n\n# Grant access to private image registry from namespace $CLUSTER_NAMESPACE\n\
+      # reference https://console.bluemix.net/docs/containers/cs_cluster.html#bx_registry_other\n\
+      echo \"==========================================================\"\necho -e\
+      \ \"CONFIGURING ACCESS to private image registry from namespace ${CLUSTER_NAMESPACE}\"\
+      \n#IMAGE_PULL_SECRET_NAME=\"ibmcloud-toolchain-${PIPELINE_TOOLCHAIN_ID}-${REGISTRY_URL}\"\
+      \nIMAGE_PULL_SECRET_NAME=\"image-pull\"\n\necho -e \"Checking for presence of\
+      \ ${IMAGE_PULL_SECRET_NAME} imagePullSecret for this toolchain\"\nif ! kubectl\
+      \ get secret ${IMAGE_PULL_SECRET_NAME} --namespace ${CLUSTER_NAMESPACE}; then\n\
+      \  echo -e \"${IMAGE_PULL_SECRET_NAME} not found in ${CLUSTER_NAMESPACE}, creating\
+      \ it\"\n  # for Container Registry, docker username is 'token' and email does\
+      \ not matter\n  kubectl --namespace ${CLUSTER_NAMESPACE} create secret docker-registry\
+      \ ${IMAGE_PULL_SECRET_NAME} --docker-server=${REGISTRY_URL} --docker-password=${PIPELINE_BLUEMIX_API_KEY}\
+      \ --docker-username=iamapikey --docker-email=a@b.com\nelse\n  echo -e \"Namespace\
+      \ ${CLUSTER_NAMESPACE} already has an imagePullSecret for this toolchain.\"\n\
+      fi\nSERVICE_ACCOUNT=$(kubectl get serviceaccount default  -o json --namespace\
+      \ ${CLUSTER_NAMESPACE} )\nif ! echo ${SERVICE_ACCOUNT} | jq -e '. | has(\"imagePullSecrets\"\
+      )' > /dev/null ; then\n  kubectl patch --namespace ${CLUSTER_NAMESPACE} serviceaccount/default\
+      \ -p '{\"imagePullSecrets\":[{\"name\":\"'\"${IMAGE_PULL_SECRET_NAME}\"'\"}]}'\n\
+      else\n  if echo ${SERVICE_ACCOUNT} | jq -e '.imagePullSecrets[] | select(.name==\"\
+      '\"${IMAGE_PULL_SECRET_NAME}\"'\")' > /dev/null ; then \n    echo -e \"Pull\
+      \ secret already found in default serviceAccount\"\n  else\n    echo \"Inserting\
+      \ toolchain pull secret into default serviceAccount\"\n    kubectl patch --namespace\
+      \ ${CLUSTER_NAMESPACE} serviceaccount/default --type='json' -p='[{\"op\":\"\
+      add\",\"path\":\"/imagePullSecrets/-\",\"value\":{\"name\": \"'\"${IMAGE_PULL_SECRET_NAME}\"\
+      '\"}}]'\n  fi\nfi\necho \"default serviceAccount:\"\nkubectl get serviceaccount\
+      \ default --namespace ${CLUSTER_NAMESPACE} -o yaml\necho -e \"Namespace ${CLUSTER_NAMESPACE}\
+      \ authorizing with private image registry using patched default serviceAccount\"\
+      \n\n"
+  - name: Deploy to ...
+    type: deployer
+    curatedDockerImage: latest
+    deploy_type: kubernetes
+    target:
+      region_id: ibm:yp:eu-gb
+      api_key: 0KItg9dwrZelq4PuK0168547crqnZ/uz71DYpjn5P5R4sk3RgqPt9pwgMVl5I4VVQivgI3QCx+70jKTkn0K4zQ==
+      account_guid: 33a4cb55663176ec2246be860bf4fafc
+      resource_group: default
+      kubernetes_cluster: Greenv2
+    script: "#!/bin/bash\n# uncomment to debug the script\n#set -x\n# copy the script\
+      \ below into your app code repo (e.g. ./scripts/deploy_kubectl.sh) and 'source'\
+      \ it from your pipeline job\n#    source ./scripts/deploy_kubectl.sh\n# alternatively,\
+      \ you can source it from online script:\n#    source <(curl -sSL \"https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/deploy_kubectl.sh\"\
+      )\n# ------------------\n# source: https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/deploy_kubectl.sh\n\
+      # Input env variables (can be received via a pipeline environment properties.file.\n\
+      echo \"IMAGE_NAME=${IMAGE_NAME}\"\necho \"IMAGE_TAG=${IMAGE_TAG}\"\necho \"\
+      REGISTRY_URL=${REGISTRY_URL}\"\necho \"REGISTRY_NAMESPACE=${REGISTRY_NAMESPACE}\"\
+      \necho \"DEPLOYMENT_FILE=${DEPLOYMENT_FILE}\"\necho \"DEPLOYMENT_NAME=${DEPLOYMENT_NAME}\"\
+      \n\n\n\n# List current directory\npwd\nls -l\n\n#View build properties\n# cat\
+      \ build.properties\n# also run 'env' command to find all available env variables\n\
+      # or learn more about the available environment variables at:\n# https://console.bluemix.net/docs/services/ContinuousDelivery/pipeline_deploy_var.html#deliverypipeline_environment\n\
+      \n# Input env variables from pipeline job\necho \"PIPELINE_KUBERNETES_CLUSTER_NAME=${PIPELINE_KUBERNETES_CLUSTER_NAME}\"\
+      \nif [ -z \"${CLUSTER_NAMESPACE}\" ]; then CLUSTER_NAMESPACE=default ; fi\n\
+      echo \"CLUSTER_NAMESPACE=${CLUSTER_NAMESPACE}\"\n\nif kubectl get deployments\
+      \ | grep \"${DEPLOYMENT_NAME}\" ; then\n\n  echo -e \"Applying configs\"\n \
+      \ echo -e \"kubectl set image deployment/${DEPLOYMENT_NAME} ${DEPLOYMENT_NAME}=${REGISTRY_URL}/${REGISTRY_NAMESPACE}/code-${IMAGE}:latest\"\
+      \n  \n  kubectl set image deployment/${DEPLOYMENT_NAME} ${DEPLOYMENT_NAME}=\"\
+      ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/code-${IMAGE}:latest\"\n  echo $?\n\n\
+      \  kubectl rollout status deployment/${DEPLOYMENT_NAME} -n ${CLUSTER_NAMESPACE}\n\
+      \  echo $?\n\n  kubectl get pods -n ${CLUSTER_NAMESPACE}\n\nelse\n\n  kubectl\
+      \ create -f ${DEPLOYMENT_FILE} -n ${CLUSTER_NAMESPACE}\n\n  echo $?\n\n  kubectl\
+      \ get pods\n\nfi\n\necho \"\"\necho \"==========================================================\"\
+      \nIMAGE_REPOSITORY=${REGISTRY_URL}/${REGISTRY_NAMESPACE}/code-${IMAGE}\necho\
+      \ -e \"CHECKING deployment status of ${IMAGE_REPOSITORY}:${IMAGE_TAG}\"\necho\
+      \ \"\"\nfor ITERATION in {1..30}\ndo\n  DATA=$( kubectl get pods --namespace\
+      \ ${CLUSTER_NAMESPACE} -o json )\n  NOT_READY=$( echo $DATA | jq '.items[].status\
+      \ | select(.containerStatuses!=null) | .containerStatuses[] | select(.image==\"\
+      '\"${IMAGE_REPOSITORY}:${IMAGE_TAG}\"'\") | select(.ready==false) ' )\n  if\
+      \ [[ -z \"$NOT_READY\" ]]; then\n    echo -e \"All pods are ready:\"\n    echo\
+      \ $DATA | jq '.items[].status | select(.containerStatuses!=null) | .containerStatuses[]\
+      \ | select(.image==\"'\"${IMAGE_REPOSITORY}:${IMAGE_TAG}\"'\") | select(.ready==true)\
+      \ '\n    break # deployment succeeded\n  fi\n  REASON=$(echo $DATA | jq '.items[].status\
+      \ | select(.containerStatuses!=null) | .containerStatuses[] | select(.image==\"\
+      '\"${IMAGE_REPOSITORY}:${IMAGE_TAG}\"'\") | .state.waiting.reason')\n  echo\
+      \ -e \"${ITERATION} : Deployment still pending...\"\n  echo -e \"NOT_READY:${NOT_READY}\"\
+      \n  echo -e \"REASON: ${REASON}\"\n  if [[ ${REASON} == *ErrImagePull* ]] ||\
+      \ [[ ${REASON} == *ImagePullBackOff* ]]; then\n    echo \"Detected ErrImagePull\
+      \ or ImagePullBackOff failure. \"\n    echo \"Please check proper authenticating\
+      \ to from cluster to image registry (e.g. image pull secret)\"\n    break; #\
+      \ no need to wait longer, error is fatal\n  elif [[ ${REASON} == *CrashLoopBackOff*\
+      \ ]]; then\n    echo \"Detected CrashLoopBackOff failure. \"\n    echo \"Application\
+      \ is unable to start, check the application startup logs\"\n    break; # no\
+      \ need to wait longer, error is fatal\n  fi\n  sleep 5\ndone"
+- name: VALIDATE
+  inputs:
+  - type: job
+    stage: Build image
+    job: Build Image
+    dir_name: null
+  triggers:
+  - type: stage
+  permission:
+    execute: TOOLCHAIN_ADMINS
+  properties:
+  - name: buildprops
+    value: build.properties
+    type: file
+  jobs:
+  - name: Vulnerability Advisor
+    type: tester
+    fail_stage: false
+    curatedDockerImage: default
+    script: "#!/bin/bash\n# uncomment to debug the script\n# set -x\n# copy the script\
+      \ below into your app code repo (e.g. ./scripts/check_vulnerabilities.sh) and\
+      \ 'source' it from your pipeline job\n#    source ./scripts/check_vulnerabilities.sh\n\
+      # alternatively, you can source it from online script:\n#    source <(curl -sSL\
+      \ \"https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_vulnerabilities.sh\"\
+      )\n# ------------------\n# source: https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_vulnerabilities.sh\n\
+      # Input env variables (can be received via a pipeline environment properties.file.\n\
+      \n# View build properties\nif [ -f build.properties ]; then \n  echo \"build.properties:\"\
+      \n  cat build.properties\nelse \n  echo \"build.properties : not found\"\nfi\
+      \ \n\n# If running after build_image.sh in same stage, reuse the exported variable\
+      \ PIPELINE_IMAGE_URL\nif [ -z \"${PIPELINE_IMAGE_URL}\" ]; then\n  PIPELINE_IMAGE_URL=${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}\n\
+      else\n  # extract from img url\n  REGISTRY_URL=$(echo ${PIPELINE_IMAGE_URL}\
+      \ | cut -f1 -d/)\n  REGISTRY_NAMESPACE=$(echo ${PIPELINE_IMAGE_URL} | cut -f2\
+      \ -d/)\n  IMAGE_NAME=$(echo ${PIPELINE_IMAGE_URL} | cut -f3 -d/ | cut -f1 -d:)\n\
+      \  IMAGE_TAG=$(echo ${PIPELINE_IMAGE_URL} | cut -f3 -d/ | cut -f2 -d:)\nfi\n\
+      echo \"PIPELINE_IMAGE_URL=${PIPELINE_IMAGE_URL}\"\necho \"REGISTRY_URL=${REGISTRY_URL}\"\
+      \necho \"REGISTRY_NAMESPACE=${REGISTRY_NAMESPACE}\"\necho \"IMAGE_NAME=${IMAGE_NAME}\"\
+      \necho \"IMAGE_TAG=${IMAGE_TAG}\"\n\n# also run 'env' command to find all available\
+      \ env variables\n# or learn more about the available environment variables at:\n\
+      # https://console.bluemix.net/docs/services/ContinuousDelivery/pipeline_deploy_var.html#deliverypipeline_environment\n\
+      \nibmcloud cr images --restrict ${REGISTRY_NAMESPACE}/${IMAGE_NAME}\necho -e\
+      \ \"Checking vulnerabilities in image: ${PIPELINE_IMAGE_URL}\"\nfor ITER in\
+      \ {1..30}\ndo\n  set +e\n  STATUS=$( bx cr va -e -o json ${PIPELINE_IMAGE_URL}\
+      \ | jq -r '.[0].status' )\n  set -e\n  # Possible status from Vulnerability\
+      \ Advisor: OK, UNSUPPORTED, INCOMPLETE, UNSCANNED, FAIL, WARN\n  if [[ ${STATUS}\
+      \ != \"INCOMPLETE\" && ${STATUS} != \"UNSCANNED\" ]]; then\n    break\n  fi\n\
+      \  echo -e \"${ITER} STATUS ${STATUS} : A vulnerability report was not found\
+      \ for the specified image.\"\n  echo \"Either the image doesn't exist or the\
+      \ scan hasn't completed yet. \"\n  echo \"Waiting for scan to complete...\"\n\
+      \  sleep 10\ndone\nset +e\nibmcloud cr va -e ${PIPELINE_IMAGE_URL}\nset -e\n\
+      STATUS=$( ibmcloud cr va -e -o json ${PIPELINE_IMAGE_URL} | jq -r '.[0].status'\
+      \ )\n[[ ${STATUS} == \"OK\" ]] || [[ ${STATUS} == \"UNSUPPORTED\" ]] || [[ ${STATUS}\
+      \ == \"WARN\" ]] || { echo \"ERROR: The vulnerability scan was not successful,\
+      \ check the OUTPUT of the command and try again.\"; exit 1; }\n"
+    namespace: greenv2-ns
+    image_name: code-php-fpm
+    image_tag: latest
+    target:
+      region_id: ibm:yp:eu-gb
+      api_key: 0KItg9dwrZelq4PuK0168547crqnZ/uz71DYpjn5P5R4sk3RgqPt9pwgMVl5I4VVQivgI3QCx+70jKTkn0K4zQ==
+      account_guid: 33a4cb55663176ec2246be860bf4fafc
+    test_type: vulnerabilityadvisor
+hooks:
+- enabled: true
+  label: null
+  ssl_enabled: false
+  url: http://lms-api/v1/messaging/webhook/publish
