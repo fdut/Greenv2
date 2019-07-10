@@ -80,5 +80,4 @@ There are two [synchronization scripts](docs/SYNCHRONIZING-DATA.md) that can be 
 
 [Apache 2.0](LICENSE.txt)
 =======
->>>>>>> c0264c385b53889f8188c5293684ccddc67e8ff1
 
