@@ -38,6 +38,7 @@ Scalability:
 ![Logical Architecture](arch/LogicalArchitecture.jpg)
 
 
+<<<<<<< HEAD
 # Drupal 8 on the IBM Cloud (based on NGINX, PHP-FPM)
 This project shows how to deploy a [Drupal 8](https://www.drupal.org/docs/8/) environment on a cluster of NGINX and PHP containers using the [IBM Container Service](https://www.ibm.com/cloud-computing/bluemix/containers) and several IBM Cloud catalog data services.
 
@@ -78,4 +79,6 @@ There are two [synchronization scripts](docs/SYNCHRONIZING-DATA.md) that can be 
 # License
 
 [Apache 2.0](LICENSE.txt)
+=======
+>>>>>>> c0264c385b53889f8188c5293684ccddc67e8ff1
 
