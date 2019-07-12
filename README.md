@@ -79,8 +79,7 @@ There are two [synchronization scripts](docs/SYNCHRONIZING-DATA.md) that can be 
 ### Security
 The web site uses TLS certificate to secure the data transfer. The domain is provided by [IBM Cloud Domain name Service](https://cloud.ibm.com/catalog/infrastructure/domain_registration) and it is managed by [IBM Cloud Internet Service aka CIS](https://cloud.ibm.com/catalog/services/internet-services). IBM CIS has the ability to keep track of the expiration date of the certificate. IBM CIS is able to renew automatically the certificate before its expiration date. IBM CIS uses a webhook to a [IBM Function](https://cloud.ibm.com/openwhisk/) (serverless) with a smart small code to renew the certificate. 
 
-# License
-
+### License
 [Apache 2.0](LICENSE.txt)
-=======
+
 
