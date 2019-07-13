@@ -58,6 +58,9 @@ Click on **Add /Edit NS** link of your domain and change the list of NameServers
 After a few minutes, you CIS instance will integrate your domain (`Active`).
 ![](img/CIS4.png)
 
+You need to redirect a subdomain such as **www**.greenv2.com to your Ingress Public IP address, create an 'A' entry just as shown below.
+![](img/CIS5.png)
+
 ## IBM Cloud Function
 **IBM Cloud Certificate Manager** needs a webhook to call on an event such as certificate expiration or certification renewal. This is done by calling a function, fortunately the IBM documentation points out a github [link](https://github.com/ibm-cloud-security/certificate-manager-domain-validation-cloud-function-sample) which shows a predefined piece of code in javascript to implement the integration between **IBM Cloud Certificate Manager** and **IBM Cloud Function**.
 The code used for greenv2 project is [here](../code/function/main.js).
