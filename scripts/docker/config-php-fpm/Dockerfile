@@ -10,7 +10,7 @@ RUN rm -f /etc/localtime \
  && ln -s /usr/share/zoneinfo/${CONTAINER_TIMEZONE} /etc/localtime
 
 # Install prerequisite OS packages
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y curl git mysql-client
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y curl git default-mysql-client
 
 # Install the PHP extensions we need
 RUN set -ex \
@@ -40,6 +40,17 @@ RUN cd /tmp \
   && cp /tmp/php-memcached/modules/memcached.so /usr/local/lib/php/extensions/no-debug-non-zts-20160303/memcached.so \
   && docker-php-ext-enable memcached \
   && ls -la /usr/local/etc/php/conf.d/
+
+# Install s3fs components for IBM Cloud Object Storage
+RUN cd /tmp \
+  && apt-get -y install awscli automake autotools-dev fuse g++ git libcurl4-gnutls-dev libfuse-dev libssl-dev libxml2-dev make pkg-config \
+  && git clone https://github.com/s3fs-fuse/s3fs-fuse.git \
+  && cd s3fs-fuse \
+  && ./autogen.sh \
+  && ./configure \
+  && make \
+  && make install \
+  && which s3fs
 
 # See https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
