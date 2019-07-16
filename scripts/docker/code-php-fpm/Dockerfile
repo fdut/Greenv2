@@ -14,17 +14,6 @@ RUN echo "Using this Registry url:  $CR_URL"
 
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y zip git
 
-# Install s3fs components for IBM Cloud Object Storage
-RUN cd /tmp \
-  && apt-get -y install awscli automake autotools-dev fuse g++ git libcurl4-gnutls-dev libfuse-dev libssl-dev libxml2-dev make pkg-config \
-  && git clone https://github.com/s3fs-fuse/s3fs-fuse.git \
-  && cd s3fs-fuse \
-  && ./autogen.sh \
-  && ./configure \
-  && make \
-  && make install \
-  && which s3fs
-
 # Register the COMPOSER_HOME environment variable.
 ENV COMPOSER_HOME=/root/.composer
 

@@ -41,17 +41,6 @@ RUN cd /tmp \
   && docker-php-ext-enable memcached \
   && ls -la /usr/local/etc/php/conf.d/
 
-# Install s3fs components for IBM Cloud Object Storage
-RUN cd /tmp \
-  && apt-get -y install awscli automake autotools-dev fuse g++ git libcurl4-gnutls-dev libfuse-dev libssl-dev libxml2-dev make pkg-config \
-  && git clone https://github.com/s3fs-fuse/s3fs-fuse.git \
-  && cd s3fs-fuse \
-  && ./autogen.sh \
-  && ./configure \
-  && make \
-  && make install \
-  && which s3fs
-
 # See https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
     echo 'opcache.memory_consumption=128'; \
