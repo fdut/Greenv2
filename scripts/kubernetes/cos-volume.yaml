@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sites-stg-pvc-cos
+  annotations:
+    ibm.io/auto-create-bucket: "true"
+    ibm.io/auto-delete-bucket: "false"
+    ibm.io/bucket: "sites-stg-pvc-cos"
+    ibm.io/secret-name: "cos-write-access"
+    ibm.io/endpoint: "https://s3.private.eu-gb.cloud-object-storage.appdomain.cloud"
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ibmc-s3fs-standard-regional
+  resources:
+    requests:
+      storage: 100Gi # could be any number
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sites-prd-pvc-cos
+  annotations:
+    ibm.io/auto-create-bucket: "true"
+    ibm.io/auto-delete-bucket: "false"
+    ibm.io/bucket: "sites-prd-pvc-cos"
+    ibm.io/secret-name: "cos-write-access"
+    ibm.io/endpoint: "https://s3.private.eu-gb.cloud-object-storage.appdomain.cloud"
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ibmc-s3fs-standard-regional
+  resources:
+    requests:
+      storage: 100Gi # could be any number

@@ -1,10 +1,15 @@
-# Drupal on Cloud Object Storage
+# Drupal on IBM Cloud Object Storage
 
 ## IBM Cloud Documentation reference
 You need to setup 
 
 
 https://cloud.ibm.com/docs/containers?topic=containers-object_storage
+
+
+
+
+kubectl create secret generic **cos-write-access** --type=ibm/ibmc-s3fs --from-literal=access-key=<access_key_id> --from-literal=secret-key=<secret_access_key>
 
 
 
