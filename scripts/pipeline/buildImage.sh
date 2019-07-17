@@ -9,7 +9,7 @@ IMAGE=$IMAGE_NAME
 
 # variable to know if we need to redeploy or no the image
 # redeploy REDEPLOY="YES" , no change REDEPLOY=""
-REDEPLOY=""
+REDEPLOY="NO"
 
 echo "IMAGE: $IMAGE"
 
