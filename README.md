@@ -76,9 +76,10 @@ See the ongoing development [instructions](docs/ONGOING-DEVELOPMENT.md). And the
 ### Synchronizing data from production back to staging
 There are two [synchronization scripts](docs/SYNCHRONIZING-DATA.md) that can be invoked to bring user generated changes to files or data from production back into the staging environment. You can also execute other scripts inside the containers as well.
 
-# License
+### Security
+The web site uses TLS certificate to secure the data transfer. The domain is provided by [IBM Cloud Domain name Service](https://cloud.ibm.com/catalog/infrastructure/domain_registration) and it is managed by [IBM Cloud Internet Service aka CIS](https://cloud.ibm.com/catalog/services/internet-services). IBM CIS has the ability to keep track of the expiration date of the certificate. IBM CIS is able to renew automatically the certificate before its expiration date. IBM CIS uses a webhook to a [IBM Function](https://cloud.ibm.com/openwhisk/) (serverless) with a smart small code to renew the certificate. 
 
+### License
 [Apache 2.0](LICENSE.txt)
-=======
->>>>>>> c0264c385b53889f8188c5293684ccddc67e8ff1
+
 
