@@ -31,19 +31,19 @@ We set up two container clusters, one for a "Staging" environment and one for a 
 - Finally, the [`scripts/kubernetes/php-cli.yaml`](../scripts/kubernetes/php-cli.yaml) configures the single shared CLI container that is used to manage files and data from both environments and synchronize data ([`code/drush/transfer-data.sh`](../code/drush/transfer-data.sh)) and files ([`code/drush/transfer-files.sh`](../code/drush/transfer-files.sh)) from production to staging.
 
 ## Build container images and push to the private registry
-If you haven't already installed the Container Service plugin for the `bx` CLI you installed when setting up the Kubernetes clusters, do it now:
+If you haven't already installed the Container Service plugin for the `ibmcloud` CLI you installed when setting up the Kubernetes clusters, do it now:
 
 ```bash
 # Configure the plugin if you haven't yet
-bx plugin install container-service -r Bluemix
-bx login -a https://api.ng.bluemix.net
-bx cs init
+ibmcloud plugin install container-service -r Bluemix
+ibmcloud login -a https://api.ng.bluemix.net
+ibmcloud cs init
 ```
 
 Next, list the clusters already provisioned on IBM Cloud, and get the Kubernetes configuration information.
 ```bash
-bx cs clusters # Find your cluster, and input into next command
-bx cs cluster-config $CLUSTER_NAME
+ibmcloud cs clusters # Find your cluster, and input into next command
+ibmcloud cs cluster-config $CLUSTER_NAME
 ```
 
 Copy the `export` line from the previous command to configure kubectl to point to your cluster.
@@ -67,15 +67,15 @@ The Dockerfiles in this repo are hardcoded to the `orod` image registry namespac
 
 Install the IBM Cloud Container Registry CLI plugin:
 ```bash
-bx plugin install container-registry -r Bluemix
-bx login -a https://api.ng.bluemix.net
+ibmcloud plugin install container-registry -r Bluemix
+ibmcloud login -a https://api.ng.bluemix.net
 ```
 
 Create a namespace:
 ```bash
-bx cr namespace-add $MY_NAMESPACE
-bx cr namespaces # List namespaces
-bx cr login # To enable pushing images
+ibmcloud cr namespace-add $MY_NAMESPACE
+ibmcloud cr namespaces # List namespaces
+ibmcloud cr login # To enable pushing images
 ```
 
 Configure scripts with your namespace. You will need to replace `orod` in
@@ -86,7 +86,7 @@ Configure scripts with your namespace. You will need to replace `orod` in
 - [nginx-prd.yaml](../scripts/kubernetes/nginx-prd.yaml)
 - [php-fpm-prd.yaml](../scripts/kubernetes/php-fpm-prd.yaml)
 
-Finally, you may have to [create an `imagePull` token](https://console.bluemix.net/docs/containers/cs_cluster.html#bx_registry_other) that allows your container cluster to access images in your private container registry.
+Finally, you may have to [create an `imagePull` token](https://console.bluemix.net/docs/containers/cs_cluster.html#ibmcloud_registry_other) that allows your container cluster to access images in your private container registry.
 
 ## Build the container images
 Run this script to build the containers and push them to your registry:
@@ -99,8 +99,8 @@ cd scripts/pipeline
 
 ```bash
 # Create an image pull token for the given registry. The kubectl command doesn't like the backslashed wrapped lines presented here for readability, so change it all to one line before you run.
-bx cr token-list
-bx cr token-get $TOKEN_ID
+ibmcloud cr token-list
+ibmcloud cr token-get $TOKEN_ID
 kubectl --namespace default create secret docker-registry image-pull \
 --docker-server="registry.ng.bluemix.net" \
 --docker-username="token" \
@@ -139,7 +139,7 @@ So far, we have configured LoadBalancer as the service type for the "nginx-prd" 
 
 2) Obtain your "Ingress subdomain".
 ```bash
-bx cs cluster-get $CLUSTER_NAME
+ibmcloud cs cluster-get $CLUSTER_NAME
 ```
 
 3) Edit [`scripts/kubernetes/ingress/ingress.yaml`](../scripts/kubernetes/ingress/ingress.yaml) to include your subdomain.
