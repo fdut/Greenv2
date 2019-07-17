@@ -12,11 +12,11 @@ As container images are built and pushed to the IBM Cloud Container Registry, th
 
 You can see whether there are any vulnerabilities in your images by listing the images:
 ```bash
-bx cr images
+ibmcloud cr images
 ```
 
 If any of them are listed as `Vulnerable` you can then see the specific issues with:
 
 ```bash
-bx cr va $IMAGE_NAME
+ibmcloud cr va $IMAGE_NAME
 ```
