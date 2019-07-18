@@ -2,7 +2,13 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: nginx-ingress
+  annotations:
+   ingress.bluemix.net/redirect-to-https: "True"
 spec:
+  tls:
+  - hosts:
+    - www.greenv2.com
+    secretName: tls-secret
   rules:
   - host: greenv2.eu-gb.containers.appdomain.cloud #find by running ibmcloud cs cluster-get <cluster name>
     http:
@@ -11,3 +17,11 @@ spec:
         backend:
           serviceName: nginx-stg
           servicePort: 80
+  - host: www.greenv2.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx-stg
+          servicePort: 80
+
