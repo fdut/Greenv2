@@ -31,7 +31,7 @@ ibmc-s3fs-vault-cross-region           ibm.io/ibmc-s3fs   23h
 ibmc-s3fs-vault-regional               ibm.io/ibmc-s3fs   23h
 ```
 
-Focusing on ibmc-s3fs-XXXX-YYYY storage classes only :
+Focusing on ibmc-s3fs-**XXXX**-\<perf-\>**YYYY** storage classes only :
 
 XXXX : **standard**, **vault**, **cold**, **flex** are the four IBM COS storage offering.
 
@@ -39,6 +39,8 @@ XXXX : **standard**, **vault**, **cold**, **flex** are the four IBM COS storage 
   - **cold** : this option should be used when few data reads occurred (actually less than 14% of total storage per month) especially for archives or backups.
   - **vault** : is a trade-off between standard and cold (more than 14% and less than 100% of total storage reads per month)
   - **flex** : this option should be used when the client do not know how its data are used, the costs are eventually capped if necessary
+
+Optional **perf** value means the usage of **IBM Aspera** to boost your data transfer. This is especially efficient on bad public network.
 
 YYYY : **cross-region**, **regional** determined the resiliency of the data, **cross-region** is at the regional failure level, **regional** is at the Availability Zone failure level.
   
