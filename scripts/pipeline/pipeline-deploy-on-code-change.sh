@@ -34,7 +34,7 @@ fi
 if [ $REDEPLOY = "NO" ];
 then
   echo "No change REDEPLOY = NO -> Exit"
-  exit
+  #exit
 fi
 
 # also run 'env' command to find all available env variables
