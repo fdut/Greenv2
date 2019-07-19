@@ -27,10 +27,10 @@ fi
 
 # Check REDEPLOY variable for redeployment or not of images
 # if $REDEPLOY = "NO" then no redeployment else redeploy or deploy images
-if [ $REDEPLOY = "NO" ]; then
-  echo "No change REDEPLOY = NO -> Exit"
-  exit
-fi
+#if [ $REDEPLOY = "NO" ]; then
+#  echo "No change REDEPLOY = NO -> Exit"
+#  exit
+#fi
 
 
 # also run 'env' command to find all available env variables
