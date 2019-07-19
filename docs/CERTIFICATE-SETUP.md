@@ -61,6 +61,10 @@ After a few minutes, you CIS instance will integrate your domain (`Active`).
 You need to redirect a subdomain such as **www**.greenv2.com to your Ingress Public IP address, create an 'A' entry just as shown below.
 ![](img/CIS5.png)
 
+Tick on **proxy** just as shown below to benefit from **IBM CIS caching**
+![](img/CIS6.png)
+
+
 ## IBM Cloud Function
 **IBM Cloud Certificate Manager** needs a webhook to call on an event such as certificate expiration or certification renewal. This is done by calling a function, fortunately the IBM documentation points out a github [link](https://github.com/ibm-cloud-security/certificate-manager-domain-validation-cloud-function-sample) which shows a predefined piece of code in javascript to implement the integration between **IBM Cloud Certificate Manager** and **IBM Cloud Function**.
 The code used for greenv2 project is [here](../code/function/main.js).
@@ -129,7 +133,11 @@ Then go to **Manage** menu and click on **Order Certificate**
 ![](img/CMS5.png)
 Click on **I'm using Cloud Internet Services**
 
-Then, give it a name and choose the CIS instance and click on **Order**.
+Then, give it a name and choose the CIS instance and choose **Wildcard certificate**
+![](img/CIS7.png)
+This will enable the certificate for all subdomain **\*.yourdomain.com**.
+
+Click on **Order**.
 
 After a few seconds, you should have a valid certificate for 90 days.
 ![](img/CMS6.png)
