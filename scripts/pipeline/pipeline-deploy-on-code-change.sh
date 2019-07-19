@@ -62,8 +62,7 @@ if kubectl get deployments | grep "${DEPLOYMENT_NAME}" ; then
 
 else
   
-  
-  kubectl delete -f ${DEPLOYMENT_FILE} -n ${CLUSTER_NAMESPACE}
+  #kubectl delete -f ${DEPLOYMENT_FILE} -n ${CLUSTER_NAMESPACE}
   echo -e "Deploy image ${DEPLOYMENT_FILE}"
   kubectl create -f ${DEPLOYMENT_FILE} -n ${CLUSTER_NAMESPACE}
 
