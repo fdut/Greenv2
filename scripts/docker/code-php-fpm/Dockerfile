@@ -9,6 +9,7 @@ ARG DRUPAL_MD5
 
 RUN echo "Using this Registry url:  $CR_URL"
 
+#NOTHING
 #RUN php -v
 #RUN php -i
 
