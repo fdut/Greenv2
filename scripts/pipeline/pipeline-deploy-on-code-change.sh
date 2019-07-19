@@ -14,7 +14,7 @@ echo "REGISTRY_URL=${REGISTRY_URL}"
 echo "REGISTRY_NAMESPACE=${REGISTRY_NAMESPACE}"
 echo "DEPLOYMENT_FILE=${DEPLOYMENT_FILE}"
 echo "DEPLOYMENT_NAME=${DEPLOYMENT_NAME}"
-
+echo "CLUSTER_NAMESPACE=${CLUSTER_NAMESPACE}"
 
 
 # List current directory
@@ -62,6 +62,8 @@ if kubectl get deployments | grep "${DEPLOYMENT_NAME}" ; then
 
 else
   
+  
+  kubectl delete -f ${DEPLOYMENT_FILE} -n ${CLUSTER_NAMESPACE}
   echo -e "Deploy image ${DEPLOYMENT_FILE}"
   kubectl create -f ${DEPLOYMENT_FILE} -n ${CLUSTER_NAMESPACE}
 
