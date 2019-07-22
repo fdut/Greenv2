@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Drupal on IBM Cloud Object Storage - Greenv2 MVP</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="..">Greenv2 MVP</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="..">Home</a>
+                            </li>
+                            <li >
+                                <a href="../about/">About</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#drupal-on-ibm-cloud-object-storage">Drupal on IBM Cloud Object Storage</a></li>
+            <li><a href="#iks-integration-with-ibm-cloud-object-storage">IKS integration with IBM Cloud Object Storage</a></li>
+            <li><a href="#ibm-cloud-object-storage-usage-in-drupal-container">IBM Cloud Object Storage usage in Drupal container</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="drupal-on-ibm-cloud-object-storage">Drupal on IBM Cloud Object Storage</h1>
+<h2 id="iks-integration-with-ibm-cloud-object-storage">IKS integration with IBM Cloud Object Storage</h2>
+<p><strong><a href="https://cloud.ibm.com/docs/containers?topic=containers-object_storage">Follow the instructions in this link to setup your IKS instance</a></strong></p>
+<p>This documentation will essential create all the needed <code>storageClass</code> in your <strong>IKS</strong> instance to address all kind of <strong>IBM Cloud Object Storage</strong> offerings. At the end of the procedure, you will have this :</p>
+<pre><code>kubernetes$ kubectl get storageClass 
+NAME                                   PROVISIONER        AGE
+default                                ibm.io/ibmc-file   27d
+ibmc-file-bronze (default)             ibm.io/ibmc-file   27d
+ibmc-file-custom                       ibm.io/ibmc-file   27d
+ibmc-file-gold                         ibm.io/ibmc-file   27d
+ibmc-file-retain-bronze                ibm.io/ibmc-file   27d
+ibmc-file-retain-custom                ibm.io/ibmc-file   27d
+ibmc-file-retain-gold                  ibm.io/ibmc-file   27d
+ibmc-file-retain-silver                ibm.io/ibmc-file   27d
+ibmc-file-silver                       ibm.io/ibmc-file   27d
+ibmc-s3fs-cold-cross-region            ibm.io/ibmc-s3fs   23h
+ibmc-s3fs-cold-regional                ibm.io/ibmc-s3fs   23h
+ibmc-s3fs-flex-cross-region            ibm.io/ibmc-s3fs   23h
+ibmc-s3fs-flex-perf-cross-region       ibm.io/ibmc-s3fs   23h
+ibmc-s3fs-flex-perf-regional           ibm.io/ibmc-s3fs   23h
+ibmc-s3fs-flex-regional                ibm.io/ibmc-s3fs   23h
+ibmc-s3fs-standard-cross-region        ibm.io/ibmc-s3fs   23h
+ibmc-s3fs-standard-perf-cross-region   ibm.io/ibmc-s3fs   23h
+ibmc-s3fs-standard-perf-regional       ibm.io/ibmc-s3fs   23h
+ibmc-s3fs-standard-regional            ibm.io/ibmc-s3fs   23h
+ibmc-s3fs-vault-cross-region           ibm.io/ibmc-s3fs   23h
+ibmc-s3fs-vault-regional               ibm.io/ibmc-s3fs   23h
+</code></pre>
+
+<p>Focusing on ibmc-s3fs-<strong>XXXX</strong>-\&lt;perf-><strong>YYYY</strong> storage classes only :</p>
+<p>XXXX : <strong>standard</strong>, <strong>vault</strong>, <strong>cold</strong>, <strong>flex</strong> are the four IBM COS storage offering.</p>
+<ul>
+<li><strong>standard</strong> : this option should be used when few data are stored especially for development environment or even for some AI usage when the overall data is read many times.</li>
+<li><strong>cold</strong> : this option should be used when few data reads occurred (actually less than 14% of total storage per month) especially for archives or backups.</li>
+<li><strong>vault</strong> : is a trade-off between standard and cold (more than 14% and less than 100% of total storage reads per month)</li>
+<li><strong>flex</strong> : this option should be used when the client do not know how its data are used, the costs are eventually capped if necessary</li>
+</ul>
+<p>Optional <strong>perf</strong> value means the usage of <strong>IBM Aspera</strong> to boost your data transfer. This is especially efficient on bad public network.</p>
+<p>YYYY : <strong>cross-region</strong>, <strong>regional</strong> determined the resiliency of the data, <strong>cross-region</strong> is at the regional failure level, <strong>regional</strong> is at the Availability Zone failure level.</p>
+<ul>
+<li>
+<p><strong>cross-region</strong> : give the ability for <strong>all</strong> of our custumers to retrieve a <strong>hundred</strong> percent of their data even of any <strong>regional</strong> breakdown (even if a whole region is burnt to the ground). In Europe, IBM Cloud Object Storage <strong>Cross Region offering</strong> is spread into <strong>Amsterdam, Francfort and Milan</strong> datacenters.</p>
+</li>
+<li>
+<p><strong>regional</strong> : give the ability for <strong>all</strong> of our custumers to retrieve a <strong>hundred</strong> percent of their data even of any <strong>availability zone</strong> breakdown (even if a whole region is burnt to the ground). In Europe, IBM Cloud Object Storage <strong>Regional offering</strong> is either <strong>London</strong> or <strong>Francfort</strong> MZR (Multi-Zone Region).</p>
+</li>
+</ul>
+<p>These storage classes may be used in your kubernetes instance <strong>Persistence Volume Claim (PVC)</strong>, you don't need to create a <strong>Persistance Volume</strong>, this latter is automatically created when a PVC of these <strong>ibmc-s3fs-XXXX-YYYY</strong> types are created. When deleting a PVC, the PV is also deleted automatically as well.</p>
+<h2 id="ibm-cloud-object-storage-usage-in-drupal-container">IBM Cloud Object Storage usage in Drupal container</h2>
+<h3 id="kubernetes-secret-to-connect-to-ibm-cloud-account">Kubernetes secret to connect to IBM Cloud account</h3>
+<p>Before creating your kubernetes PVC, you need to create a kubernete secret, so that the  <strong>ibmc-s3fs-XXXX-YYYY</strong> storage class driver is able to connect to the right IBM Cloud account. You may use either a combination of (<strong>API Key + COS ID instance</strong>) or the standard S3 combination (<strong>access key id + secret access key</strong>). The first one allows you to have more control on privileges because it is based on <strong>IAM</strong>.</p>
+<p>Here is an exemple of the kubectl command to create the secret based on the standard S3 combination :</p>
+<pre><code>kubectl create secret generic &lt;secret_name&gt; --type=ibm/ibmc-s3fs --from-literal=access-key=&lt;access_key_id&gt; --from-literal=secret-key=&lt;secret_access_key&gt;
+</code></pre>
+
+<ul>
+<li>secret_name : specify a <strong>secret</strong> name</li>
+<li>access_key_id : provide the hmac <strong>access_key_id</strong> value</li>
+<li>secret_access_key : provide the hmac <strong>secret_access_key</strong> value</li>
+</ul>
+<h3 id="how-to-get-those-details-from-ibm-cos">How to get those details from IBM COS ?</h3>
+<h4 id="create-your-ibm-cloud-object-storage-instance">Create your IBM Cloud Object Storage instance</h4>
+<p>Search in the IBM Cloud catalog this item and click on it.</p>
+<p><img alt="" src="../img/COS1.png" /></p>
+<p>Provide a <strong>name</strong>, a <strong>resource group</strong>, choose the <strong>standard plan</strong> and click on <code>create</code></p>
+<p><img alt="" src="../img/COS2.png" />
+ <img alt="" src="../img/COS3.png" /></p>
+<p>Go to <strong>Service credentials</strong> and click on <code>new credential</code></p>
+<p><img alt="" src="../img/COS4.png" /></p>
+<p>Provide a <strong>name</strong>, choose <strong>writer</strong> role, tick on <strong>Include HMAC credential</strong> {"HMAC":true} appears in the optional parameters pane, then click <code>add</code></p>
+<p><img alt="" src="../img/COS5.png" /></p>
+<p>Click on <code>View credentials</code>
+<img alt="" src="../img/COS6.png" /></p>
+<p>You may now copied either the <strong>apikey</strong> or the couple <strong>access_key_id/secret_access_key</strong>. In our example above, we use this latter.</p>
+<h3 id="kubernetes-clusterrole-for-ibm-cloud-object-storage-driver">Kubernetes ClusterRole for IBM Cloud Object Storage Driver</h3>
+<p>You need to create a Kubernetes ClusterRole named <strong><em>ibmcloud-object-storage-secret-reader</em></strong> including your secret
+Here is the yaml file needed :</p>
+<pre><code>kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: ibmcloud-object-storage-secret-reader
+rules:
+- apiGroups: [&quot;&quot;]
+  resources: [&quot;secrets&quot;]
+  resourceNames: [&quot;&lt;secret_name&gt;&quot;]
+  verbs: [&quot;get&quot;]
+</code></pre>
+
+<p>Put your secret name in the resourceNames, you may put a list of secret names if needed.</p>
+<h3 id="create-a-kubernetes-pvc">Create a Kubernetes PVC</h3>
+<p>You may now be able to create a Kubernetes PVC based on IBM Cloud Object Storage bucket.
+Use the following yaml file to create your Kubernetes PVC :</p>
+<pre><code>---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: &lt;pvc name&gt;
+  annotations:
+    ibm.io/auto-create-bucket: &quot;true&quot;
+    ibm.io/auto-delete-bucket: &quot;false&quot;
+    ibm.io/bucket: &quot;&lt;bucket name&gt;&quot;
+    ibm.io/secret-name: &quot;&lt;secret name&gt;&quot;
+    ibm.io/endpoint: &quot;https://s3.private.eu-gb.cloud-object-storage.appdomain.cloud&quot;
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ibmc-s3fs-standard-regional
+  resources:
+    requests:
+      storage: 100Gi # could be any number
+</code></pre>
+
+<ul>
+<li>pvc name: provide your Kubernetes PVC name here in order to claim it in a pod</li>
+<li>bucket name: provide a bucket name, this bucket will appear in your IBM Cloud COS instance. Choose a long name because it has to be unique within all the existing bucket of the same region (including all other client buckets)</li>
+<li>secret name : provide your secret name you created before.</li>
+</ul>
+<p>Notice that the size of the storage is compulsory but its value has no sense, as the IBM Cloud COS bucket has no volume limitation.</p>
+<p>FI : a bucket may have up to 2^128 objects and an object may be up to 10 TB size.</p>
+<p>You may check your IBM Cloud COS PVC</p>
+<pre><code>kubernetes$ kubectl get pvc | grep ibmc-s3fs
+sites-prd-pvc-cos    Bound    pvc-24323d88-a7a6-11e9-9ed4-6657bd2680ff   100Gi      RWX            ibmc-s3fs-standard-regional   23h
+sites-stg-pvc-cos    Bound    pvc-24298a3a-a7a6-11e9-9ed4-6657bd2680ff   100Gi      RWX            ibmc-s3fs-standard-regional   23h
+</code></pre>
+
+<h3 id="use-your-kubernetes-pvc-in-your-kubernetes-drupal-pod">Use your Kubernetes PVC in your Kubernetes Drupal pod</h3>
+<p>Specify a mount path in your pod spec:</p>
+<pre><code>          volumeMounts:
+            - mountPath: /var/www/drupal/web/sites/default
+              name: sites-cos-storage
+              readOnly: false
+
+</code></pre>
+
+<p>And specify you PVC name</p>
+<pre><code>      volumes:
+        - name: sites-cos-storage
+          persistentVolumeClaim:
+            claimName: &lt;pvc name&gt;
+
+</code></pre>
+
+<p>Actually, the Drupal container try at startup to change the owner of the <strong><em>/var/www/drupal/web/sites/default/files</em></strong> directory.
+thus the <strong><em>files</em></strong> sub directory should exist before this action, otherwise the container will fail.
+You need then to initiate an initContainer who mount the same directory and create the <strong><em>files</em></strong> sub directory in the event this one do not exist.</p>
+<pre><code>      initContainers:
+        - image: &quot;uk.icr.io/greenv2-ns/code-php-fpm:latest&quot;
+          volumeMounts:
+            - mountPath: /var/www/drupal/web/sites/default
+              name: sites-cos-storage
+              readOnly: false
+          name: create-files
+          command: [ &quot;sh&quot;, &quot;-c&quot;, &quot;mkdir -p /var/www/drupal/web/sites/default/files&quot; ]
+          securityContext:
+            runAsUser: 0
+
+</code></pre>
+
+<p>Then any file or diretory created in the <strong><em>/var/www/drupal/web/sites/default</em></strong> sub directory will create an object in the specified IBM COS bucket</p>
+<p>Here is an example of two PVC created which trigger the create of two buckets:</p>
+<p><img alt="" src="../img/COS7.png" /></p>
+<p>The following example shows how COS is organized via the ibmc-s3fs driver:</p>
+<pre><code>root@php-fpm-stg-d5bb47bfb-j6hqk:/var/www/drupal/web/sites/default# ls -lR
+.:
+total 1
+drwxrwxrwx 1 www-data www-data 0 Jul 17 10:19 files
+
+./files:
+total 1
+drwxr-xr-x 1 root root 0 Jul 17 10:20 dir1
+drwxr-xr-x 1 root root 0 Jul 17 10:21 dir2
+
+./files/dir1:
+total 1
+-rw-r--r-- 1 root root 7 Jul 17 10:21 myfile1
+
+./files/dir2:
+total 1
+-rw-r--r-- 1 root root 7 Jul 17 10:21 myfile2
+
+</code></pre>
+
+<p>Each directory (files, dir1, dir2) has an entry in the bucket</p>
+<p>Each file (myfile1, myfile2) has also an entry in the bucket</p>
+<p><img alt="" src="../img/COS8.png" /></p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"search": 83, "next": 78, "help": 191, "previous": 80};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

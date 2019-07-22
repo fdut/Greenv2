@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>TLS-CERTIFICATE Deployment and Usage - Greenv2 MVP</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="..">Greenv2 MVP</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="..">Home</a>
+                            </li>
+                            <li >
+                                <a href="../about/">About</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#tls-certificate-deployment-and-usage">TLS-CERTIFICATE Deployment and Usage</a></li>
+            <li><a href="#ibm-cloud-documentation-reference">IBM Cloud Documentation reference</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="tls-certificate-deployment-and-usage">TLS-CERTIFICATE Deployment and Usage</h1>
+<h2 id="ibm-cloud-documentation-reference">IBM Cloud Documentation reference</h2>
+<p>This documentation is based on <a href="https://cloud.ibm.com/docs/containers?topic=containers-cli-plugin-kubernetes-service-cli#cs_alb_cert_deploy">How to deploy a certificate to an IKS cluster in IBM Cloud documentation</a>.
+You might have to update your laptop plugin first <a href="https://cloud.ibm.com/docs/containers?topic=containers-cli-plugin-kubernetes-service-cli#cs_beta">here</a>.</p>
+<h3 id="step-1-get-your-certificate-crn">Step 1. Get your Certificate CRN</h3>
+<p>Go back to your certificate Manager service and copy your Certificate CRN</p>
+<p><img alt="" src="img/TLS-deploy1.png" /></p>
+<h3 id="step-2-deploy-your-certificate-to-your-iks-cluster">Step 2. Deploy your certificate to your IKS Cluster</h3>
+<ol>
+<li>Connect to your IBM Cloud Account by issuing the following command and follow the instructions :
+<code>ibmcloud login -a cloud.ibm.com -r &lt;region&gt; -sso</code>
+ where <region> is eu-gb for London or eu-de for Francfort, ...</li>
+<li>Download the kubeconfig files for your cluster.
+Issue the following command :
+<code>ibmcloud ks cluster-config --cluster Greenv2</code>
+where Greenv2 here is the name of your IKS cluster.</li>
+<li>
+<p>You should have this message :
+<code>The configuration for Greenv2 was downloaded successfully.</code>
+<code>Export environment variables to start using Kubernetes.</code>
+<code>export KUBECONFIG=/Users/vann/.bluemix/plugins/container-service/clusters/Greenv2/kube-config-lon02-Greenv2.yml</code></p>
+</li>
+<li>
+<p>Apply the last line <code>export KUBECONFIG=...</code> to make your IKS cluster your default context.</p>
+</li>
+<li>Then you are set to deploy your TLS certificate to your IKS Cluster, Issue the following to deploy :
+<code>ibmcloud ks alb-cert-deploy --cluster Greenv2 --secret-name &lt;tls-secret&gt; --cert-crn &lt;Certificate CRN&gt;</code>.
+Where <Certificate CRN> is the CRN you got from <strong>Step 1.</strong> above.
+and <strong><tls-secret></strong> is the secret name in namespace <strong>ibm-cert-store</strong> and namespace <strong>default</strong>.
+Now, the <strong><tls-secret></strong> secret is created in <strong>ibm-cert-store</strong> and <strong>default</strong> namespaces.</li>
+</ol>
+<h3 id="step-3-how-to-use-your-certificate-when-deploying-your-application">Step 3. How to use your certificate when deploying your application</h3>
+<p>Most details are described <a href="https://cloud.ibm.com/docs/containers?topic=containers-ingress_annotation#https-auth">here</a>.</p>
+<h3 id="step-4-how-to-update-to-a-new-certificate">Step 4. How to update to a new certificate</h3>
+<p>Simply issue the following command to update your secret when a new certificate has been re-issued.
+<code>ibmcloud ks alb-cert-deploy --update --cluster Greenv2 --secret-name &lt;tls-secret&gt; --cert-crn &lt;Certificate CRN&gt;</code>.</p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"search": 83, "next": 78, "help": 191, "previous": 80};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

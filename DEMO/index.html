@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Drupal sites on the IBM Container Service - Greenv2 MVP</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="..">Greenv2 MVP</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="..">Home</a>
+                            </li>
+                            <li >
+                                <a href="../about/">About</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#drupal-sites-on-the-ibm-container-service">Drupal sites on the IBM Container Service</a></li>
+            <li><a href="#preamble-why-kubernetes">Preamble: Why Kubernetes?</a></li>
+            <li><a href="#what-this-proof-of-concept-shows">What this Proof of Concept shows</a></li>
+            <li><a href="#1-functional-drupal-site-running-on-the-ibm-cloud">1. Functional Drupal site running on the IBM Cloud</a></li>
+            <li><a href="#2-clearly-defined-and-easy-to-implement-process-for-pushing-code-updates">2. Clearly defined and easy to implement process for pushing code updates</a></li>
+            <li><a href="#3-synchronize-or-migrate-one-database-to-another-database">3. Synchronize or migrate one database to another database</a></li>
+            <li><a href="#4-taking-advantage-of-a-continuous-integration-pipeline">4. Taking advantage of a continuous integration pipeline</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="drupal-sites-on-the-ibm-container-service">Drupal sites on the IBM Container Service</h1>
+<h2 id="preamble-why-kubernetes">Preamble: Why Kubernetes?</h2>
+<p>The shift towards cloud-native deployment models allows developers to package their applications consistently between staging and production, and helps them scale their deployments horizontally across a large pool of compute resources more quickly.</p>
+<p>In contrast to other cloud-native approaches - like Platform-as-a-Service with Heroku or Cloud Foundry - container orchestration system like Kubernetes are "less-opinionated" and offer a great amount of flexibility at the cost of a single prescribed set of guidelines, which can make them more attractive to those migrating from a virtual machine or bare metal approach rather than towards PaaS directly.</p>
+<h2 id="what-this-proof-of-concept-shows">What this Proof of Concept shows</h2>
+<p>This PoC shows how one might migrate a traditional web-server, application-server, and database-server based application into a container-based model that depends on cloud services in order to speed application development by reducing time spent on managing servers across a large deployment target environment.</p>
+<ol>
+<li><a href="#1-functional-drupal-site-running-on-the-ibm-cloud">Functional Drupal site running on the IBM Cloud</a></li>
+<li><a href="#2-clearly-defined-and-easy-to-implement-process-for-pushing-code-updates">Clearly defined and easy to implement process for pushing code updates</a></li>
+<li><a href="#3-synchronize-or-migrate-one-database-to-another-database">Synchronize or migrate one database to another database</a></li>
+<li><a href="#4-taking-advantage-of-a-continous-integration-pipeline">Taking advantage of a continous integration pipeline</a></li>
+</ol>
+<h2 id="1-functional-drupal-site-running-on-the-ibm-cloud">1. Functional Drupal site running on the IBM Cloud</h2>
+<p>A managed Kubernetes cluster from the IBM Kubernetes Service provides the fabric on which to install a set of NGINX and PHP-FPM containers that run Drupal.</p>
+<p>These containers package custom site code and the underlying Kubernetes fabric can bind those containers to data services, load balancers, and storage volumes provided by the IBM Cloud.</p>
+<h3 id="11-initial-environment-setup">1.1 Initial environment setup</h3>
+<p>The <a href="../INITIAL-SETUP/">initial setup</a> instructions show how to set up a Kubernetes cluster and provision the MySQL, Redis, and Memcached services needed by the Drupal cluster.</p>
+<h3 id="12-first-container-cluster-deployment">1.2 First container cluster deployment</h3>
+<p>Once the fabric and services are configured, you can build container images and deploy them to the IBM Container Service manually or through an automated pipeline. The <a href="../DEPLOY-CONTAINERS/">container deployment instructions</a> describe how.</p>
+<h3 id="13-complete-drupal-configuration">1.3 Complete Drupal configuration</h3>
+<p>Connecting to Drupal to finish installation. Once all of the containers have gotten to the <code>Running</code> state (you can see status with 'kubectl get pods') you can find the public IP of the Drupal cluster with <code>kubectl get services</code>. Because the <code>settings.php</code> file has been set up to get the MySQL connection information from the Kubernetes environment, it's a shorter process than normal.</p>
+<h2 id="2-clearly-defined-and-easy-to-implement-process-for-pushing-code-updates">2. Clearly defined and easy to implement process for pushing code updates</h2>
+<p>Once the initial environment is set up, you can initiate additional build, test, and deploy workflows by committing code to specific folders in this repository. This simulates GitHub or BitBucket web hooks.</p>
+<h3 id="21-updating-the-underlying-nginx-and-php-container-images">2.1 Updating the underlying NGINX and PHP container images</h3>
+<p>You can commit updated NGINX or PHP version files to the <code>config</code> directory. This will in turn trigger base image rebuilds in the DevOps pipeline, and in turn rebuild custom Drupal-based <code>code</code> images on top and deploy them.</p>
+<h3 id="22-updating-custom-code-and-triggering-code-layer-rebuilds">2.2 Updating custom code and triggering code layer rebuilds</h3>
+<p>You can commit code that should be layered on top of base NGINX, PHP, and Drupal installation by changing code in the <code>code</code> directory. This will trigger a custom code rebuild and deploy.</p>
+<h2 id="3-synchronize-or-migrate-one-database-to-another-database">3. Synchronize or migrate one database to another database</h2>
+<p>Ongoing management of the Drupal cluster can be performed with arbitrary shell commands and <code>drush</code> commands invoked by logging into the PHP-CLI container. This container could also be extended to run arbitrary commands on startup through the DevOps pipeline.</p>
+<h3 id="31-using-the-php-cli-container-to-execute-arbitrary-commands">3.1. Using the PHP CLI container to execute arbitrary commands</h3>
+<p>You can exec into the PHP CLI container to <a href="../PHP-CLI-DRUSH/">run arbitrary bash or MySQL commands</a>.</p>
+<h3 id="32-using-the-php-cli-container-to-execute-migration-commands">3.2. Using the PHP CLI container to execute migration commands</h3>
+<p>You can exec into the PHP CLI container to <a href="../PHP-CLI-DRUSH/">run the <code>transfer-data.sh</code> and <code>transfer-files.sh</code> scripts injected from the <code>code/drush</code> directory</a>. For example: <code>kubectl exec ${PHP_CLI_CONTAINER_NAME} /root/drush/transfer-files.sh</code> and <code>kubectl exec ${PHP_CLI_CONTAINER_NAME} /root/drush/transfer-data.sh</code></p>
+<h3 id="33-using-a-php-fpm-container-to-execute-drush-commands">3.3. Using a PHP FPM container to execute <code>drush</code> commands</h3>
+<p>You can exec into the PHP FPM container to <a href="../PHP-CLI-DRUSH/">run the <code>drush-status.sh</code> script injected from the <code>code/drush</code> directory</a>. For example: <code>kubectl exec ${PHP_FPM_CONTAINER_NAME} /var/www/drupal/drush/drush-status.sh</code></p>
+<h2 id="4-taking-advantage-of-a-continuous-integration-pipeline">4. Taking advantage of a continuous integration pipeline</h2>
+<p>The <a href="../PIPELINE-SETUP/">pipeline setup instructions</a> show how IBM DevOps can be used with user-defined scripts and webhooks to initiate build, test, and deployment flows. These can incorporate unit test scripts, security vulnerability assessments, and blue/green rolling deploys. These workflows can reuse build tool Docker images as well, which is a new feature of IBM DevOps services.</p>
+<h3 id="41-checking-in-configuration-or-code-updates">4.1. Checking in configuration or code updates</h3>
+<p>Once configured, the pipeline will detect changes to the top level <code>config</code> and <code>code</code> directories and trigger new build and deploy processes depending on the change.</p>
+<h3 id="42-synchronizing-data-from-production-to-staging">4.2 Synchronizing data from production to staging</h3>
+<p>You can also use the pipeline UI to execute data and file synchronization. You can also set up arbitrary script execution by extending this model.</p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"search": 83, "next": 78, "help": 191, "previous": 80};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

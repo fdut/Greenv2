@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>TLS-CERTIFICATE Setup - Greenv2 MVP</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="..">Greenv2 MVP</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="..">Home</a>
+                            </li>
+                            <li >
+                                <a href="../about/">About</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#tls-certificate-setup">TLS-CERTIFICATE Setup</a></li>
+            <li><a href="#prerequesite-ibm-cloud-account">Prerequesite : IBM Cloud Account</a></li>
+            <li><a href="#ibm-cloud-components-needed">IBM Cloud Components needed</a></li>
+            <li><a href="#ibm-cloud-domain-name-service">IBM Cloud Domain Name Service</a></li>
+            <li><a href="#ibm-cloud-internet-service-cis">IBM Cloud Internet Service (CIS)</a></li>
+            <li><a href="#ibm-cloud-function">IBM Cloud Function</a></li>
+            <li><a href="#ibm-cloud-certificate-manager">IBM Cloud Certificate Manager</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="tls-certificate-setup">TLS-CERTIFICATE Setup</h1>
+<h2 id="prerequesite-ibm-cloud-account">Prerequesite : IBM Cloud Account</h2>
+<h2 id="ibm-cloud-components-needed">IBM Cloud Components needed</h2>
+<p>The project needs to have a secure website based on TLS encryption, hence https protocol is used, this latter needs a valid and up-to-date certificate.</p>
+<ol>
+<li><strong>IBM Certificate Manager</strong> is used to store and to manage the certificate</li>
+<li>IBM Certificate Manager check expiration date and if needed call a webhook <strong>Function Service</strong> to renew the certificate</li>
+<li>A certificate is generated for a domain name, this one is handled by <strong>IBM Cloud Internet Service</strong>, the domain registrar is handle by <strong>IBM Cloud Domain Name Service</strong>.</li>
+</ol>
+<h2 id="ibm-cloud-domain-name-service">IBM Cloud Domain Name Service</h2>
+<p>You may register a new domain <a href="https://cloud.ibm.com/catalog/infrastructure/domain_registration"><strong>here</strong></a>.</p>
+<p><img alt="" src="../img/domainname1.png" /></p>
+<p>Click on <strong>CREATE</strong>.</p>
+<p><img alt="" src="../img/domainname2.png" />
+Provide a domain name, the price may change depending on the extension (.com, .net, .org, ...) and the number of years chosen.</p>
+<p>You may click on <strong>Check Availability</strong> to check whether or not the domain name provided is available.</p>
+<p><img alt="" src="../img/domainname3.png" /></p>
+<p>You may proceed by clicking on <strong>Continue</strong> if your domain name is available</p>
+<p><img alt="" src="../img/domainname4.png" />
+Fill up the form and take care about the email address which will be used to validate your purchase.
+Click on <strong>Order Now</strong> to validate the process.</p>
+<p>After clicking on the link in the mail sent to your mailbox, you should have valid domain name such as follows after a few minutes :
+<img alt="" src="../img/domainname5.png" /></p>
+<h2 id="ibm-cloud-internet-service-cis">IBM Cloud Internet Service (CIS)</h2>
+<p>You may create an IBM CIS instance <a href="https://cloud.ibm.com/catalog/services/internet-services">here</a>.</p>
+<p><img alt="" src="../img/CIS1.png" />
+Click on <strong>CREATE</strong>.</p>
+<p><img alt="" src="../img/CIS2.png" />
+Click on <strong>Let's get started</strong>.</p>
+<p><img alt="" src="../img/CIS3.png" />
+Provided the domain name you created on the previous stage and Click on <strong>Connect and continue</strong>.</p>
+<p>The system will automatically detect the NameServers attached by default (your registrar setup) to your domain, and proposed a list of CIS NameServers to replace, for instance :</p>
+<p><code>ns1.softlayer.com -&gt; ns015.name.cloud.ibm.com</code>
+<code>ns2.softlayer.com -&gt; ns016.name.cloud.ibm.com</code></p>
+<p>You need to go back your <strong>Domain Registration</strong> sub-menu from the <strong>Classic Infrastructure</strong> menu
+<img alt="" src="../img/domainname6.png" />
+Click on <strong>Add /Edit NS</strong> link of your domain and change the list of NameServers accordingly to the CIS demands.</p>
+<p>After a few minutes, you CIS instance will integrate your domain (<code>Active</code>).
+<img alt="" src="../img/CIS4.png" /></p>
+<p>You need to redirect a subdomain such as <strong>www</strong>.greenv2.com to your Ingress Public IP address, create an 'A' entry just as shown below.
+<img alt="" src="../img/CIS5.png" /></p>
+<p>Tick on <strong>proxy</strong> just as shown below to benefit from <strong>IBM CIS caching</strong>
+<img alt="" src="../img/CIS6.png" /></p>
+<h2 id="ibm-cloud-function">IBM Cloud Function</h2>
+<p><strong>IBM Cloud Certificate Manager</strong> needs a webhook to call on an event such as certificate expiration or certification renewal. This is done by calling a function, fortunately the IBM documentation points out a github <a href="https://github.com/ibm-cloud-security/certificate-manager-domain-validation-cloud-function-sample">link</a> which shows a predefined piece of code in javascript to implement the integration between <strong>IBM Cloud Certificate Manager</strong> and <strong>IBM Cloud Function</strong>.
+The code used for greenv2 project is <a href="../code/function/main.js">here</a>.</p>
+<p>Here is a few screenshot that is not presented in the link when configuring the function especially regarding the parameters.</p>
+<p><img alt="" src="../img/Func1.png" /></p>
+<p><code>iamApiKey</code>
+The easiest way to have this one is to go the Access(IAM) menu
+<img alt="" src="../img/Func2.png" /></p>
+<p><img alt="" src="../img/Func3.png" />
+And click on <strong>IBM Cloud API keys</strong> and then <strong>Create an IBM Cloud API key</strong></p>
+<p><img alt="" src="../img/Func4.png" /></p>
+<p>Provide a name an click on <strong>Create</strong></p>
+<p>You will be given a one-time-only view of the key</p>
+<p><img alt="" src="../img/Func5.png" /></p>
+<p>Copy and paste it to the iamApiKey parameter of the function.
+I might download it to a file to have a backup of the key somewhere else.
+IBM Cloud will never show that key again after closing this window.</p>
+<p><code>allowedCertificateManagerCRNs</code>
+Actually, we skipped this one by commenting the first check in the main function.</p>
+<p><code>cisCrn</code>
+This parameter may be retrieved in the overview of your CIS instance.
+<img alt="" src="../img/Func6.png" /></p>
+<p><code>cmRegion</code>
+This parameter is used to determine the Region endpoint of your CIS.
+It should be :</p>
+<pre><code>- eu-gb for London
+- eu-de for Francfort
+...
+</code></pre>
+<h2 id="ibm-cloud-certificate-manager">IBM Cloud Certificate Manager</h2>
+<p>Create your <strong>IBM Cloud Certificate Manager</strong> instance <a href="https://cloud.ibm.com/catalog/services/certificate-manager">here</a>.</p>
+<p><img alt="" src="../img/CMS1.png" />
+Go to <strong>Notifications</strong> and Click on <strong>Add Notification Channel</strong>.</p>
+<p><img alt="" src="../img/CMS2.png" />
+Select <strong>Callback URL</strong> and paste to the <strong>Channel Endpoint</strong> the URL pasted from the function created (see below) and click on <strong>Save</strong>.</p>
+<p><img alt="" src="../img/CMS3.png" /></p>
+<p>You may click on <strong>Test connection</strong> to check if your URL is correct.</p>
+<p><img alt="" src="../img/CMS4.png" /></p>
+<p>Then go to <strong>Manage</strong> menu and click on <strong>Order Certificate</strong></p>
+<p><img alt="" src="../img/CMS5.png" />
+Click on <strong>I'm using Cloud Internet Services</strong></p>
+<p>Then, give it a name and choose the CIS instance and choose <strong>Wildcard certificate</strong>
+<img alt="" src="../img/CIS7.png" />
+This will enable the certificate for all subdomain <strong>*.yourdomain.com</strong>.</p>
+<p>Click on <strong>Order</strong>.</p>
+<p>After a few seconds, you should have a valid certificate for 90 days.
+<img alt="" src="../img/CMS6.png" /></p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"search": 83, "next": 78, "help": 191, "previous": 80};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

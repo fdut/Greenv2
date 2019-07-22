@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>LOCAL KUBERNETES - Greenv2 MVP</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="..">Greenv2 MVP</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="..">Home</a>
+                            </li>
+                            <li >
+                                <a href="../about/">About</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#installing-minikube">Installing MiniKube</a></li>
+        <li class="main "><a href="#using-minikube">Using MiniKube</a></li>
+        <li class="main "><a href="#accessing-services-in-minikube">Accessing services in Minikube</a></li>
+        <li class="main "><a href="#minikube-load-balancer-and-nodeports">MiniKube load balancer and nodeports</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h3 id="installing-minikube">Installing MiniKube</h3>
+<p>TODO</p>
+<h3 id="using-minikube">Using MiniKube</h3>
+<p>Start Minikube</p>
+<pre><code>minikube start
+Starting local Kubernetes cluster...
+Starting VM...
+Getting VM IP address...
+Moving files into cluster...
+Setting up certs...
+Connecting to cluster...
+Setting up kubeconfig...
+Starting cluster components...
+Kubectl is now configured to use the cluster.
+</code></pre>
+<p>Check status</p>
+<pre><code>kubectl get nodes
+NAME       STATUS    ROLES     AGE       VERSION
+minikube   Ready     &lt;none&gt;    6m        v1.7.5
+</code></pre>
+<p>If opening another terminal windows, point Docker and Kubectl to
+Minikube</p>
+<pre><code>eval $(minikube docker-env)
+</code></pre>
+<h3 id="accessing-services-in-minikube">Accessing services in Minikube</h3>
+<p>Switching the nginx service from <code>LoadBalancer</code> to <code>NodePort</code>:</p>
+<pre><code>└─[$]&gt; kubectl get services
+NAME         TYPE           CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP      10.0.0.1     &lt;none&gt;        443/TCP        1d
+nginx        LoadBalancer   10.0.0.34    &lt;pending&gt;     80:32352/TCP   1d
+php-fpm      ClusterIP      10.0.0.93    &lt;none&gt;        9000/TCP       1d
+
+# Change spec.type to NodePort
+└─[$]&gt; kubectl edit service nginx
+service "nginx" edited
+
+└─[$]&gt; kubectl get services
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP   10.0.0.1     &lt;none&gt;        443/TCP        1d
+nginx        NodePort    10.0.0.34    &lt;none&gt;        80:32352/TCP   1d
+php-fpm      ClusterIP   10.0.0.93    &lt;none&gt;        9000/TCP       1d
+
+└─[$]&gt; minikube service nginx
+Opening kubernetes service default/nginx in default browser...
+
+└─[$]&gt; minikube service nginx --url
+http://192.168.99.100:32352
+</code></pre>
+<h3 id="minikube-load-balancer-and-nodeports">MiniKube load balancer and nodeports</h3>
+<p>https://github.com/kubernetes/minikube/issues/950</p>
+<blockquote>
+<p>Currently minikube doesn't support LoadBalancer, it doesn't assign to
+ it external IP. And services are supposed to access using minikube
+ service service-name... is uses port mapping and it is quite cumbersome
+ (esp if service exposes more then one port)</p>
+</blockquote>
+<p>https://github.com/kubernetes/minikube/issues/38</p>
+<p>Referenced by #950, #950 marked as a dupe of #38.</p>
+<p>https://medium.com/@claudiopro/getting-started-with-kubernetes-via-minikube-ada8c7a29620</p>
+<blockquote>
+<p>Note we must use the type=NodePort because minikube doesn’t support the LoadBalancer service.</p>
+</blockquote>
+<pre><code>$ kubectl expose deployment hello-node --type=NodePort
+$ kubectl get services
+$ curl $(minikube service hello-node --url)
+</code></pre>
+<p>https://github.com/kubernetes/minikube/issues/384</p>
+<blockquote>
+<p>LoadBalancer services run fine on minikube, just with no real external
+ load balancer created. LoadBalancer services get a node port assigned
+ too so you can access services via <code>minikube service &lt;name&gt;</code> to open
+ browser or add <code>--url</code> flag to output service URL to terminal.
+ Would that cover what you need or is there something more that you'd
+ like to see?</p>
+</blockquote></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"search": 83, "next": 78, "help": 191, "previous": 80};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>DEPLOY CONTAINERS - Greenv2 MVP</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="..">Greenv2 MVP</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="..">Home</a>
+                            </li>
+                            <li >
+                                <a href="../about/">About</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#building-and-deploying-the-initial-set-of-containers">Building and deploying the initial set of containers</a></li>
+        <li class="main "><a href="#review-the-docker-build-files">Review the Docker build files</a></li>
+        <li class="main "><a href="#review-the-kubernetes-container-deployment-configuration-files">Review the Kubernetes container deployment configuration files</a></li>
+        <li class="main "><a href="#build-container-images-and-push-to-the-private-registry">Build container images and push to the private registry</a></li>
+        <li class="main "><a href="#configure-your-namespace">Configure your namespace</a></li>
+        <li class="main "><a href="#build-the-container-images">Build the container images</a></li>
+        <li class="main "><a href="#deploy-the-container-images-to-the-kubernetes-cluster">Deploy the container images to the Kubernetes cluster</a></li>
+        <li class="main "><a href="#specify-a-non-floating-loadbalancer-ip">Specify a non-floating LoadBalancer IP</a></li>
+        <li class="main "><a href="#setup-ingress-replaces-loadbalancer">Setup Ingress (replaces LoadBalancer)</a></li>
+        <li class="main "><a href="#tear-down-the-containers">Tear down the containers</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h2 id="building-and-deploying-the-initial-set-of-containers">Building and deploying the initial set of containers</h2>
+<p>Now that the Kubernetes cluster and MySQL, Redis, and Memcached services have been provisioned, it's time to start a set of containers (pods) on the Kubernetes worker nodes. We do this through a set of declarative YAML files, which define not only the containers to start, but the storage and network configuration that they depend on.</p>
+<h2 id="review-the-docker-build-files">Review the Docker build files</h2>
+<p>There are 6 Docker images, 3 for base configuration and 3 custom code which build upon the base configuration.</p>
+<p>The first set of three (NGINX, PHP-FPM, and PHP-CLI) provide the underlying web server and PHP environment needed by Drupal. These are rebuilt based on new version numbers provided in text files in the <code>config</code> directory, which in turn triggers a rebuild of the second set of three <code>code</code> images.</p>
+<ol>
+<li>
+<p>The <a href="../scripts/docker/config-nginx/Dockerfile"><code>scripts/docker/config-nginx/Dockerfile</code></a> provides a base level of NGINX configured to delegate PHP requests to PHP-FPM.</p>
+</li>
+<li>
+<p>The <a href="../scripts/docker/config-php-fpm/Dockerfile"><code>scripts/docker/config-php-fpm/Dockerfile</code></a> provides a base level of operating system packages with PHP-FPM and extensions.</p>
+</li>
+<li>
+<p>The <a href="../scripts/docker/config-php-cli/Dockerfile"><code>scripts/docker/config-php-cli/Dockerfile</code></a> provides a base level of OS packages with PHP-CLI and extensions.</p>
+</li>
+</ol>
+<p>The second set of three (NGINX, PHP-FPM, and PHP-CLI) provide image builds specific to Drupal, Drush, and custom code that is pushed to the <code>code</code> directory. They are rebuilt when anything in that directory changes.</p>
+<ol>
+<li>
+<p>The <a href="../scripts/docker/code-nginx/Dockerfile"><code>scripts/docker/code-nginx/Dockerfile</code></a> builds on the base image and adds static code to the <code>/var/www/html</code> directory.</p>
+</li>
+<li>
+<p>The <a href="../scripts/docker/code-php-fpm/Dockerfile"><code>scripts/docker/code-php-fpm/Dockerfile</code></a> installs Drupal via Composer, then copies over custom code. It also mounts and configures the volume needed at runtime through its <code>start.sh</code> script.</p>
+</li>
+<li>
+<p>The <a href="../scripts/docker/code-php-cli/Dockerfile"><code>scripts/docker/code-php-cli/Dockerfile</code></a> installs Drush via Composer, then copies over custom code. It also mounts and configures both the staging and production volumes needed at runtime through its <code>start.sh</code> script.</p>
+</li>
+</ol>
+<h2 id="review-the-kubernetes-container-deployment-configuration-files">Review the Kubernetes container deployment configuration files</h2>
+<p>The Kubernetes deployment files instantiate containers based on the <code>code</code> images (never just the <code>config</code> images).</p>
+<p>We set up two container clusters, one for a "Staging" environment and one for a "Production" environment. They share the same base Docker images.</p>
+<ul>
+<li>The <a href="../scripts/kubernetes/persistent-volumes.yaml"><code>scripts/kubernetes/persistent-volumes.yaml</code></a> files defines two 20 GB storage volumes (one for staging, one for production) that can be mounted by many containers (<code>ReadWriteMany</code>). The containers then reference these volumes in their own configuration files.</li>
+<li>The <a href="../scripts/kubernetes/php-fpm-stg.yaml"><code>scripts/kubernetes/php-fpm-stg.yaml</code></a> and <a href="../scripts/kubernetes/php-fpm-prd.yaml"><code>scripts/kubernetes/php-fpm-prd.yaml</code></a> files describe the pod/deployment for the PHP-FPM containers in each environment. They specify how many containers from the given image and tag to start, what port to listen on, the environment variables that map to the service credentials, and where to mount the storage volume.</li>
+<li>Similarly, the <a href="../scripts/kubernetes/nginx-stg.yaml"><code>scripts/kubernetes/nginx-stg.yaml</code></a> and <a href="../scripts/kubernetes/nginx-prd.yaml"><code>scripts/kubernetes/nginx-prd.yaml</code></a> files describe the pod/deployment for the NGINX containers. They specify how many containers from the given image and tag to start (1, for now), what port to listen on, what IP address to bind to, the environment variables that map to the service credentials, and where to mount the storage volume.</li>
+<li>Finally, the <a href="../scripts/kubernetes/php-cli.yaml"><code>scripts/kubernetes/php-cli.yaml</code></a> configures the single shared CLI container that is used to manage files and data from both environments and synchronize data (<a href="../code/drush/transfer-data.sh"><code>code/drush/transfer-data.sh</code></a>) and files (<a href="../code/drush/transfer-files.sh"><code>code/drush/transfer-files.sh</code></a>) from production to staging.</li>
+</ul>
+<h2 id="build-container-images-and-push-to-the-private-registry">Build container images and push to the private registry</h2>
+<p>If you haven't already installed the Container Service plugin for the <code>ibmcloud</code> CLI you installed when setting up the Kubernetes clusters, do it now:</p>
+<pre><code class="bash"># Configure the plugin if you haven't yet
+ibmcloud plugin install container-service -r Bluemix
+ibmcloud login -a https://api.ng.bluemix.net
+ibmcloud cs init
+</code></pre>
+
+<p>Next, list the clusters already provisioned on IBM Cloud, and get the Kubernetes configuration information.</p>
+<pre><code class="bash">ibmcloud cs clusters # Find your cluster, and input into next command
+ibmcloud cs cluster-config $CLUSTER_NAME
+</code></pre>
+
+<p>Copy the <code>export</code> line from the previous command to configure kubectl to point to your cluster.</p>
+<pre><code class="bash"># Configure kubectl
+export KUBECONFIG=/Users/$USER_HOME_DIR/.bluemix/plugins/container-service/clusters/$CLUSTER_NAME/kube-config-$DATA_CENTER-$CLUSTER_NAME.yml
+</code></pre>
+
+<p>Finally, test your connection by interacting with your cluster.</p>
+<pre><code class="bash"># Confirm cluster is ready
+kubectl get nodes
+
+# Run the visual dashboard proxy and open it with a browser on your workstation at http://127.0.0.1:8001/ui
+kubectl proxy
+</code></pre>
+
+<h2 id="configure-your-namespace">Configure your namespace</h2>
+<p>The Dockerfiles in this repo are hardcoded to the <code>orod</code> image registry namespace. You need to create your own namespace and update the deployment manifests that reference images.</p>
+<p>Install the IBM Cloud Container Registry CLI plugin:</p>
+<pre><code class="bash">ibmcloud plugin install container-registry -r Bluemix
+ibmcloud login -a https://api.ng.bluemix.net
+</code></pre>
+
+<p>Create a namespace:</p>
+<pre><code class="bash">ibmcloud cr namespace-add $MY_NAMESPACE
+ibmcloud cr namespaces # List namespaces
+ibmcloud cr login # To enable pushing images
+</code></pre>
+
+<p>Configure scripts with your namespace. You will need to replace <code>orod</code> in
+- <a href="../scripts/build-containers.sh">build-containers.sh</a>
+- <a href="../scripts/kubernetes/php-cli.yaml">php-cli.yaml</a>
+- <a href="../scripts/kubernetes/nginx-stg.yaml">nginx-stg.yaml</a>
+- <a href="../scripts/kubernetes/php-fpm-stg.yaml">php-fpm-stg.yaml</a>
+- <a href="../scripts/kubernetes/nginx-prd.yaml">nginx-prd.yaml</a>
+- <a href="../scripts/kubernetes/php-fpm-prd.yaml">php-fpm-prd.yaml</a></p>
+<p>Finally, you may have to <a href="https://console.bluemix.net/docs/containers/cs_cluster.html#ibmcloud_registry_other">create an <code>imagePull</code> token</a> that allows your container cluster to access images in your private container registry.</p>
+<h2 id="build-the-container-images">Build the container images</h2>
+<p>Run this script to build the containers and push them to your registry:</p>
+<pre><code class="bash">cd scripts/pipeline
+./build-on-config-change.sh
+</code></pre>
+
+<h2 id="deploy-the-container-images-to-the-kubernetes-cluster">Deploy the container images to the Kubernetes cluster</h2>
+<pre><code class="bash"># Create an image pull token for the given registry. The kubectl command doesn't like the backslashed wrapped lines presented here for readability, so change it all to one line before you run.
+ibmcloud cr token-list
+ibmcloud cr token-get $TOKEN_ID
+kubectl --namespace default create secret docker-registry image-pull \
+--docker-server=&quot;registry.ng.bluemix.net&quot; \
+--docker-username=&quot;token&quot; \
+--docker-password=&quot;${TOKEN}&quot; \
+--docker-email=&quot;${YOUR_EMAIL}&quot;
+
+./rolling-code-deploy.sh
+</code></pre>
+
+<p>The YAML files in this directory reference the same image names (including the name of our registry namespace) as in the <code>build-on-config-change.sh</code> script. These is the hand-off point between image build/push, and Kubernetes deploy.</p>
+<h2 id="specify-a-non-floating-loadbalancer-ip">Specify a non-floating LoadBalancer IP</h2>
+<p>Obtain the available IPs assigned to your cluster (look for "is_public: true")</p>
+<pre><code class="bash">kubectl get cm ibm-cloud-provider-vlan-ip-config -n kube-system -o yaml
+</code></pre>
+
+<p>Set an IP address for Staging and Production in the <code>spec.loadBalancerIP</code> value inside <a href="../scripts/kubernetes/nginx-prd.yaml"><code>scripts/kubernetes/nginx-prd.yaml</code></a> and <a href="../scripts/kubernetes/nginx-stg.yaml"><code>scripts/kubernetes/nginx-stg.yaml</code></a>.</p>
+<p>For example:</p>
+<pre><code class="bash">apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-prd
+spec:
+  loadBalancerIP: $IP
+  ...
+---
+</code></pre>
+
+<h2 id="setup-ingress-replaces-loadbalancer">Setup Ingress (replaces LoadBalancer)</h2>
+<p>So far, we have configured LoadBalancer as the service type for the "nginx-prd" service. We can use the Ingress type instead to give us more flexibility with specifying routes from a single endpoint and also us to use a hostname instead of floating IPs to access our application. Detailed docs here: https://console.bluemix.net/docs/containers/cs_apps.html#cs_apps_public_ingress.</p>
+<p>1) Remove the <code>type: LoadBalancer</code> line from <a href="../scripts/kubernetes/nginx-prd.yaml"><code>scripts/kubernetes/nginx.yaml</code></a></p>
+<p>2) Obtain your "Ingress subdomain".</p>
+<pre><code class="bash">ibmcloud cs cluster-get $CLUSTER_NAME
+</code></pre>
+
+<p>3) Edit <a href="../scripts/kubernetes/ingress/ingress.yaml"><code>scripts/kubernetes/ingress/ingress.yaml</code></a> to include your subdomain.</p>
+<p>4) Redeploy your "nginx-prd" service</p>
+<pre><code class="bash">kubectl delete service nginx-prd
+kubectl apply -f scripts/kubernetes/nginx-prd.yaml
+</code></pre>
+
+<p>5) Deploy the ingress service</p>
+<pre><code class="bash">kubectl apply -f scripts/kubernetes/ingress/ingress.yaml
+</code></pre>
+
+<p>6) Once ingress is up (may take a minute), access your application via your domain.</p>
+<h2 id="tear-down-the-containers">Tear down the containers</h2>
+<p>If you want to cleanly install the environment, for example to push a new set of container versions, use the following script:</p>
+<pre><code class="bash">cd scripts/pipeline
+./rolling-code-deploy.sh
+</code></pre></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"search": 83, "next": 78, "help": 191, "previous": 80};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

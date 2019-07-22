@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Toolchain Introduction - Greenv2 MVP</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="..">Greenv2 MVP</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="..">Home</a>
+                            </li>
+                            <li >
+                                <a href="../about/">About</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#toolchain-introduction">Toolchain Introduction</a></li>
+        <li class="main "><a href="#building-the-toolchain">Building the Toolchain</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="toolchain-introduction">Toolchain Introduction</h1>
+<p>This toolchain will enable your containers to automatically build and push to a registry as well as deploy to a Kubernetes cluster hosted on the IBM Cloud. This toolchain will be comprised of multiple pipelines, one for each major component of the cluster. Ideally there would be four different layers in build/deploy process:</p>
+<ol>
+<li>Push code to repository</li>
+<li>Check to see what directories have been changed<ul>
+<li>If config directory has been changed, rebuild base images and code layer</li>
+<li>If code directory has been changed, only build the code layer</li>
+</ul>
+</li>
+<li>Build images</li>
+<li>Test images with Vulnerability Advisor.</li>
+<li>Deploy to staging environment</li>
+<li>Deploy to production environment</li>
+</ol>
+<p>Each of these layers could come from a different repository and could be built and deployed when code is pushed.</p>
+<p>For the purpose of this POC, we have one repo that contains all of our images and custom code. Our finished toolchain will appear as follows:</p>
+<p><img alt="Completed Toolchain" src="../img/completedToolchain.PNG" /></p>
+<h1 id="building-the-toolchain">Building the Toolchain</h1>
+<ol>
+<li>To get started, click on the "hamburger" menu at the top left of Bluemix and select <strong>Dev Ops</strong>.</li>
+</ol>
+<p><img alt="IBM Cloud Menu" src="../img/bluemixMenu.PNG" /></p>
+<ol>
+<li>Click on Toolchains on the left pane</li>
+<li>Click Create Toolchain</li>
+<li>Scroll down to Other Templates and select <strong>Build Your Own Toolchain</strong></li>
+</ol>
+<p><img alt="Build your own template" src="../img/customTemplate.PNG" /></p>
+<ol>
+<li>Name toolchain and click <strong>Create</strong></li>
+<li>Click on <strong>Add a Tool</strong></li>
+</ol>
+<p><img alt="Build your own template" src="img/addTool.png" /></p>
+<ol>
+<li>Click on <strong>Git Repos and Issue Tracking</strong></li>
+</ol>
+<p><img alt="Git Integration" src="../img/gitTool.PNG" /></p>
+<ol>
+<li>Fill in details</li>
+</ol>
+<p><img alt="Git Settings" src="../img/gitSettings.PNG" /></p>
+<ul>
+<li>Select Clone</li>
+<li>Enter the URL to Dan's repo</li>
+<li>Enter a Repository name (or not)</li>
+<li>Make sure the <strong>Track deployment of code changes</strong> checkbox is checked. This will allow the pipeline to trigger automatically with code changes.</li>
+<li>Click <strong>Create Integration</strong></li>
+<li>Add another tool</li>
+<li>Select <strong>Delivery Pipeline</strong></li>
+</ul>
+<p><img alt="Git Settings" src="img/deliveryPipeline.png" /></p>
+<ul>
+<li>Name the pipeline <strong>nginx</strong></li>
+<li>
+<p>Click <strong>Create Integration</strong></p>
+</li>
+<li>
+<p>Before moving on, we need to get an IBM Cloud API key. Click on <strong>Manage</strong> at the top right, hover over <strong>Security</strong> and select <strong>IBM Cloud API keys</strong>.</p>
+</li>
+<li>
+<p>Click on <strong>Create</strong>, give your key a name and description, click Create.</p>
+</li>
+<li>
+<p>Click <em>Show</em> and copy your API key. Make absolutely sure that you copied the key correctly because after you leave this page, you will not be able to see the key again.</p>
+</li>
+<li>
+<p>Go back to your toolchain. You can get there by clicking on the menu at the top left, selecting <strong>DevOps</strong>, then selecting your toolchain from the list.</p>
+</li>
+<li>
+<p>On the toolchain page, click on the Delivery Pipeline.</p>
+</li>
+</ul>
+<p><img alt="Click on Delivery Pipeline" src="../img/toolchainPage.PNG" /></p>
+<ol>
+<li>
+<p>Click <strong>Add Stage</strong></p>
+</li>
+<li>
+<p>Make changes to <strong>Input</strong> tab.</p>
+</li>
+<li>Give stage a name</li>
+<li>Ensure git URL and branch are correct</li>
+<li>Ensure that <strong>Run jobs whenever a change is pushed to Git</strong> is selected. This will allow for the container images to build automatically.</li>
+</ol>
+<p><img alt="Build Input" src="../img/buildInput.PNG" />  </p>
+<ol>
+<li>Click on the <strong>Jobs</strong> tab. Click on <strong>Add Job</strong> and select <strong>Build</strong>.</li>
+<li>Under <em>Builder Type</em> select <strong>Container Registry</strong>.</li>
+<li>Under <em>API Key</em> see if your IBM Cloud API Key appears. If not, click on <strong>Add an existing API Key</strong> and enter the API key that you copied earlier.</li>
+<li>For <em>IBM Cloud Container Registry namespace</em> enter <strong>jjdojo</strong></li>
+<li>In <em>Docker image name</em> enter <strong>nginx</strong></li>
+</ol>
+<p><img alt="Build Stage" src="../img/buildJob.PNG" /></p>
+<ul>
+<li>In the <em>Build Script</em> section enter the following:
+    <code>bash
+    echo "Calling the build script"
+    cd scripts/pipeline
+    . ./buildImage.sh</code></li>
+<li>
+<p>Leave the rest as it is and click on <strong>Save</strong> at the bottom of the stage.</p>
+</li>
+<li>
+<p>Next, create another stage and name it <strong>Test</strong>. In this stage you can run any custom test scripts or use the built-in Vulnerability Advisor.</p>
+</li>
+<li>
+<p>Click on the jobs tab, add a new job, and select <strong>Test</strong>.</p>
+</li>
+<li>
+<p>Under <em>Tester Type</em>, select <strong>Vulnerability Advisor</strong></p>
+</li>
+<li>Under <em>API Key</em> slect the key for your org or enter a new one</li>
+<li>Under <em>Bluemix Container Registry Namespace</em> enter your Namespace</li>
+<li>Select the <em>Docker Image Name</em> and <em>Docker Image Tag</em> that you want to test.</li>
+<li>Add any additional testing scripts in the <em>Test Script</em> area.</li>
+<li>When done, click <em>Save</em></li>
+</ul>
+<p><img alt="Test Stage" src="../img/testStage.PNG" /></p>
+<ol>
+<li>
+<p>Once you are back on the pipeline page, click <strong>Add Stage</strong> again. Now we need to add our stage for deploying to the staging environemnt.</p>
+</li>
+<li>
+<p>Name the stage <strong>Staging</strong> and make sure the input is coming from the previous build stage as seen below.</p>
+</li>
+</ol>
+<p><img alt="Deploy stage input" src="../img/deployInput.PNG" /></p>
+<ol>
+<li>Next, click on the <strong>Jobs</strong> tab and click <strong>Add job</strong> and select <strong>Deploy</strong>.</li>
+<li>For <em>Deployer Type</em> select <strong>kubernetes</strong></li>
+<li>Enter your API Key under <em>API Key</em></li>
+<li>Select the cluster that you would like to deploy to.</li>
+<li>In the <em>Deploy Script</em> section, enter the following:</li>
+</ol>
+<p>```bash
+  #!/bin/bash</p>
+<p>. scripts/pipeline/pipelineDeployScripts/nginx-deploy.sh
+  ```
+  <img alt="Deploy Job" src="../img/deployJob.PNG" /></p>
+<ul>
+<li>
+<p>Next we need to add an environment variable to tell the script which environment we are deploying to. Click on the <em>Environment Properties</em> tab.</p>
+</li>
+<li>
+<p>Click <em>Add Property</em>, select <em>Text Property</em>, and under name enter <strong>ENVIRONMENT</strong> and under <em>Value</em> enter <strong>stg</strong>.</p>
+</li>
+</ul>
+<p><img alt="Stg environment variable" src="../img/EnvVar.PNG" /></p>
+<ul>
+<li>
+<p>When done, click on <strong>Save</strong></p>
+</li>
+<li>
+<p>Next, we need to create another deployment stage but this time we will deploy to the production environment. Repeat steps <strong>22 - 24</strong> but this time, name the stage <strong>Production</strong>, and for the environment property, enter <strong>prd</strong>. The deploy script for both environments will be the same.</p>
+</li>
+<li>
+<p>We should now have four stages in our nginx pipeline. This pipeline will handle the building, testing, and deploying of the nginx container in two different environments. We now need to add pipelines for our other containers. Click on the toolchain name at the top left of the page to take you back to the toolchain page.</p>
+</li>
+</ul>
+<p><img alt="Finished pipeline" src="../img/finishedPipeline.PNG" /></p>
+<ol>
+<li>Follow steps <strong>14 - 25</strong> to create pipelines for the other images while making sure to change the image names for the respective pipeline as well as making sure that the registry namespace and targeted cluster remains the same. Be sure to change the deploy script for each pipeline as follows:</li>
+</ol>
+<hr />
+<ul>
+<li><strong>Note that php-cli does not need to be deployed into both environments</strong></li>
+<li>For php-cli:
+  ```bash
+  #!/bin/bash</li>
+</ul>
+<p>. scripts/pipeline/pipelineDeployScripts/php-cli-deploy.sh</p>
+<p>```</p>
+<hr />
+<ul>
+<li>For php-fpm:
+  ```bash
+  #!/bin/bash</li>
+</ul>
+<p>. scripts/pipeline/pipelineDeployScripts/php-fpm-deploy.sh</p>
+<p>```</p>
+<hr />
+<ol>
+<li>
+<p>Next, we need to add the step to build the persistent volumes. Create one more pipeline and name it <strong>Persistent Volumes</strong></p>
+</li>
+<li>
+<p>Click on it to configure the pipeline and add a new stage.</p>
+</li>
+<li>
+<p>Add a new <strong>Deploy</strong> job, for <em>Deployer Type</em> select <strong>Kubernetes</strong>, enter your API Key, and select your target cluster.</p>
+</li>
+<li>
+<p>For the in the <em>Deploy Script</em> section, enter the following:
+  <code>bash
+  #!/bin/bash
+  kubectl apply -f scripts/kubernetes/persistent-volumes.yaml</code></p>
+</li>
+</ol>
+<p><img alt="Persistent Volume Deploy" src="../img/persistentVolumeDeploy.PNG" /></p>
+<ol>
+<li>
+<p>When done, click <strong>Save</strong>.</p>
+</li>
+<li>
+<p>Now we just need to add one last pipeline that will allow us to manually run scripts to transfer files and data between environments. Click on the toolchain name at the top left to go back to the toolchain page.</p>
+</li>
+<li>
+<p>Click <em>Add a Tool</em></p>
+</li>
+<li>Select <strong>Delivery Pipeline</strong></li>
+<li>Name the pipeline <strong>Data Sync</strong></li>
+<li>
+<p>Once the pipeline has been created, click on it to configure the stages.</p>
+</li>
+<li>
+<p>Click <em>Add Stage</em> and name the stage <strong>Transfer Files</strong></p>
+</li>
+<li>
+<p>On the <em>Input</em> tab, change the <em>Stage Trigger</em> to <em>Run jobs only when this stage is run manually</em></p>
+</li>
+<li>
+<p>Click on the <em>Jobs</em> tab</p>
+</li>
+<li>Click <em>Add Job</em> and select <em>Deploy</em></li>
+<li>Name the job <strong>Transfer Files</strong></li>
+<li>Set the <em>Deployer Type</em> to <strong>Kubernetes</strong></li>
+<li>Verify the <em>API Key</em>, <em>Target</em>, and <em>Kubernetes Cluster</em></li>
+<li>
+<p>For the <em>Deploy Script</em> enter the following:
+    ```bash
+    #!/bin/bash</p>
+<p>echo $(kubectl get pod -l "app=php-cli" -o jsonpath='{.items[0].metadata.name}')</p>
+<p>kubectl exec $(kubectl get pod -l "app=php-cli" -o jsonpath='{.items[0].metadata.name}') /root/drush/transfer-files.sh</p>
+<p>```
+- Click <em>Save</em>
+34. Add another stage
+  - Name the stage <strong>Transfer Data</strong>
+  - Click on the <em>Input</em> tab and set the <em>Stage Trigger</em> to <strong>Run jobs only when this stage is run manually</strong></p>
+</li>
+<li>
+<p>Click on the <em>Jobs</em> tab</p>
+</li>
+<li>Click <em>Add Job</em> and select <em>Deploy</em></li>
+<li>Name the job <strong>Transfer Data</strong></li>
+<li>Set the <em>Deployer Type</em> to <strong>Kubernetes</strong></li>
+<li>Verify the <em>API Key</em>, <em>Target</em>, and <em>Kubernetes Cluster</em></li>
+<li>For the <em>Deploy Script</em> enter the following:
+  ```bash
+  #!/bin/bash</li>
+</ol>
+<p>echo $(kubectl get pod -l "app=php-cli" -o jsonpath='{.items[0].metadata.name}')</p>
+<p>kubectl exec $(kubectl get pod -l "app=php-cli" -o jsonpath='{.items[0].metadata.name}') /root/drush/transfer-data.sh</p>
+<p>```
+  - Click <em>Save</em></p>
+<ol>
+<li>Our toolchain is now configured and should look similar to the image below:</li>
+</ol>
+<p><img alt="Completed Toolchain" src="../img/completedToolchain.PNG" /></p>
+<p>All that we have to do now is push a change to our repo to automatically kick off the pipeline.</p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"search": 83, "next": 78, "help": 191, "previous": 80};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

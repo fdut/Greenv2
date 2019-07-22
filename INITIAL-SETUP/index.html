@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>INITIAL SETUP - Greenv2 MVP</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="..">Greenv2 MVP</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="..">Home</a>
+                            </li>
+                            <li >
+                                <a href="../about/">About</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#provision-a-kubernetes-cluster-on-the-ibm-cloud-container-service">Provision a Kubernetes cluster on the IBM Cloud Container Service</a></li>
+        <li class="main "><a href="#connect-to-your-kubernetes-cluster-from-your-workstation">Connect to your Kubernetes cluster from your workstation</a></li>
+        <li class="main "><a href="#provision-and-bind-two-mysql-as-a-service-instances">Provision and bind two MySQL-as-a-Service instances</a></li>
+        <li class="main "><a href="#provision-and-bind-a-redis-as-a-service">Provision and bind a Redis-as-a-Service</a></li>
+        <li class="main "><a href="#provision-and-bind-a-memcached-as-a-service">Provision and bind a Memcached-as-a-Service</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h2 id="provision-a-kubernetes-cluster-on-the-ibm-cloud-container-service">Provision a Kubernetes cluster on the IBM Cloud Container Service</h2>
+<ul>
+<li>Create a paid IBM Cloud account, and log into the dashboard.</li>
+<li>
+<p>Choose Containers from the left hand hamburger navigation.</p>
+<p><img alt="" src="../img/1-hamburger.png" /></p>
+</li>
+<li>
+<p>Click the Create cluster button.</p>
+<p><img alt="" src="../img/2-create-cluster.png" /></p>
+</li>
+<li>
+<p>Select the Standard pay-as-you-go type of cluster (this allows for storage volumes and public floating IPs) and Create.</p>
+<p><img alt="" src="../img/3-standard-cluster.png" /></p>
+</li>
+<li>
+<p>Going back to the Dashboard from the navigation, you'll see your cluster.</p>
+</li>
+<li>
+<p>Click on it to see the cluster Overview.</p>
+<p><img alt="" src="../img/4-overview.png" /></p>
+</li>
+<li>
+<p>Click on Worker Nodes to get details on your worker nodes.</p>
+<p><img alt="" src="../img/5-worker-nodes.png" /></p>
+</li>
+<li>
+<p>It will take time for the cluster to complete provisioning, so go get some coffee.</p>
+</li>
+</ul>
+<h2 id="connect-to-your-kubernetes-cluster-from-your-workstation">Connect to your Kubernetes cluster from your workstation</h2>
+<ul>
+<li>
+<p>Click on the Access link to download and configure the <code>bx</code> and <code>kubectl</code> CLIs. <code>kubectl</code> version &gt;=1.7.6 is required.</p>
+<p><img alt="" src="../img/6-access.png" /></p>
+</li>
+<li>
+<p>Run the configuration commands, making sure that the <code>$KUBECONFIG</code> variable path is indeed correct (it may not reflect your actual home directory).</p>
+</li>
+<li>You can then use <code>kubectl</code> or the <code>kubectl proxy</code> dashboard web UI that starts on localhost to inspect your Kubernetes environment.</li>
+</ul>
+<h2 id="provision-and-bind-two-mysql-as-a-service-instances">Provision and bind two MySQL-as-a-Service instances</h2>
+<ul>
+<li>You can do this with the <code>bx</code> command too, but I prefer to work with the dashboard as it's just a one time setup operation with several options to browse through.</li>
+<li>
+<p>Go to the hamburger navigation again and choose Data &amp; Analytics.</p>
+<p><img alt="" src="../img/7-hamburger-data-analytics.png" /></p>
+</li>
+<li>
+<p>Click "Create"</p>
+<p><img alt="" src="../img/8-create-data-analytics.png" /></p>
+</li>
+<li>
+<p>You have a choice of two MySQL-as-a-Service providers, Compose and ClearDB. ClearDB is quicker to get running with for a PoC. You can use the free plan, but if you need better performance, choose a paid plan.</p>
+<p><img alt="" src="../img/9-create-mysql-service.png" /></p>
+</li>
+<li>
+<p>Take note of the credentials, and save them in a <code>scripts/kubernetes/secrets/service-credentials.txt</code> file you copy from <a href="../scripts/kubernetes/secrets/service-credentials.txt.tpl"><code>scripts/kubernetes/secrets/service-credentials.txt.tpl</code></a>. There are variables for both a "Staging" database instance and a "Production" instance. They will be separate databases with separate credentials.</p>
+</li>
+</ul>
+<p>For ClearDB, the credentials can be found in the ClearDB Dashboard. Select your database and click the "System Information" tab
+    <img alt="" src="../img/13-cleardb-credentials.png" /></p>
+<p>For Compose, the credentials will be shown right before you create the service.
+    <img alt="" src="../img/12-compose-credentials.png" /></p>
+<ul>
+<li>
+<p>The IBM Cloud Container Service offers a way to autobind credentials, but using a secret from this credentials file gives us the option to use services in another organization and space and/or start it up later as its own pod.</p>
+</li>
+<li>
+<p>Repeat these steps to create a second database and make sure you have entries for both in the <code>scripts/kubernetes/secrets/service-credentials.txt</code> file.</p>
+</li>
+</ul>
+<h2 id="provision-and-bind-a-redis-as-a-service">Provision and bind a Redis-as-a-Service</h2>
+<ul>
+<li>You can do this with the <code>bx</code> command too, but I prefer to work with the dashboard as it's a one time setup operation with several options.</li>
+<li>
+<p>Go to the hamburger navigation again and choose Data &amp; Analytics.</p>
+<p><img alt="" src="../img/7-hamburger-data-analytics.png" /></p>
+</li>
+<li>
+<p>Click "Create"</p>
+<p><img alt="" src="../img/8-create-data-analytics.png" /></p>
+</li>
+<li>
+<p>You have a choice of two Redis-as-a-Service providers, Compose and Redis Cloud. Redis Cloud has a free tier, so you can just use that. </p>
+<p><img alt="" src="../img/10-create-redis-service.png" /></p>
+</li>
+<li>
+<p>Take note of the credentials, and save them in <code>scripts/kubernetes/secrets/service-credentials.txt</code>.</p>
+</li>
+<li>
+<p>For Compose, the credentials can be found by selecting the service from the dasboard, and clicking "Service Credentials"</p>
+<p><img alt="" src="../img/14-redis-credentials.png" /></p>
+</li>
+</ul>
+<h2 id="provision-and-bind-a-memcached-as-a-service">Provision and bind a Memcached-as-a-Service</h2>
+<ul>
+<li>You can do this with the <code>bx</code> command too, but I prefer to work with the dashboard as it's a one time setup operation with several options.</li>
+<li>
+<p>Go to the hamburger navigation again and choose Data &amp; Analytics.</p>
+<p><img alt="" src="../img/7-hamburger-data-analytics.png" /></p>
+</li>
+<li>
+<p>Click "Create"</p>
+<p><img alt="" src="../img/8-create-data-analytics.png" /></p>
+</li>
+<li>
+<p>Choose Memcached from Redis Cloud.</p>
+<p><img alt="" src="../img/11-create-memcached-service.png" /></p>
+</li>
+<li>
+<p>Take note of the credentials, and save them in <code>scripts/kubernetes/secrets/service-credentials.txt</code>.</p>
+</li>
+</ul></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"search": 83, "next": 78, "help": 191, "previous": 80};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

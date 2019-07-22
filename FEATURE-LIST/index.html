@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>FEATURE LIST - Greenv2 MVP</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="..">Greenv2 MVP</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="..">Home</a>
+                            </li>
+                            <li >
+                                <a href="../about/">About</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#feature-list">Feature list</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h2 id="feature-list">Feature list</h2>
+<p>It covers these baseline features and scenarios:
+- [ ] Provides a script <a href="scripts/setup-infrastructure.sh"><code>scripts/setup-infrastructure.sh</code></a> that is a placeholder to deploy a Kubernetes cluster and provision the MySQL, Redis, and Memcached services from the IBM Cloud. As an alternative, see the <a href="docs/INITIAL-SETUP.md">configuration page</a> for the UI instructions.
+- [x] Provides a script <a href="scripts/build-containers.sh"><code>scripts/build-containers.sh</code></a> that starts with a supported base PHP 5.6 image, injects custom code, runs Composer, tags and pushes the image to an IBM Cloud Container Registry.
+- [x] Provides a script <a href="scripts/deploy-containers.sh"><code>scripts/deploy-containers.sh</code></a> to deploy a set of 4 containers (1 NGINX container, 2 PHP-FPM containers, 1 PHP-CLI) from those images and mounts a shared volume to the 3 PHP containers.
+- [x] Connects the 3 PHP containers to a MySQL-as-a-Service on startup.
+- [x] Connects the 3 PHP containers to a Redis-as-a-Service on startup.
+- [x] Connects the 3 PHP containers to a Memcached-as-a-Service on startup.
+- [x] Exposes a load balanced endpoint that takes an HTTP POST request and routes it through NGINX to the PHP containers, which saves data in the MySQL and Redis databases, stores it in Memcached, and writes a file to the shared file system.
+- [x] Exposes a load balanced endpoint <a href="scripts/docker/php-fpm/app/read.php"><code>app/read.php</code></a> that takes an HTTP GET request and routes it through NGINX to the PHP containers, which retrieves data in the MySQL and Redis databases, retrieves data from Memcached, and reads a file from the shared file system.
+- [x] Exposes a load balanced endpoint <a href="scripts/docker/php-fpm/app/create.php"><code>app/create.php</code></a> that takes an HTTP POST request and routes it through NGINX to the PHP containers, which creates data in the MySQL and Redis databases, caches data from Memcached, and creates a file on the shared file system.
+- [x] Exposes a load balanced endpoint <a href="scripts/docker/php-fpm/app/create.php"><code>app/delete.php</code></a> that takes an HTTP DELETE request and routes it through NGINX to the PHP containers, which deletes data in the MySQL and Redis databases, clears data from Memcached, and deletes a file from the shared file system.
+- [ ] Builds and redeploys new containers with zero downtime on GitHub push.
+- [x] Provides a script <a href="scripts/destroy-containers.sh"><code>scripts/destroy-containers.sh</code></a> to stop and remove the containers (but not the storage volume).
+- [ ] Provides a script <a href="scripts/setup-infrastructure.sh"><code>scripts/destroy-infrastructure.sh</code></a> that is a placeholder to destroy a Kubernetes cluster and deprovision the MySQL, Redis, and Memcached services from the IBM Cloud.</p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"search": 83, "next": 78, "help": 191, "previous": 80};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
