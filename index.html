@@ -49,6 +49,23 @@
                             <li class="active">
                                 <a href=".">Home</a>
                             </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li >
+    <a href="DEMO/">Deployment</a>
+</li>
+                                    
+<li >
+    <a href="CERTIFICATE-SETUP/">Certificates</a>
+</li>
+                                    
+<li >
+    <a href="Drupal-Cloud-Object-Storage/">Cloud Object Storage</a>
+</li>
+                                </ul>
+                            </li>
                             <li >
                                 <a href="about/">About</a>
                             </li>
@@ -66,7 +83,7 @@
                                 </a>
                             </li>
                             <li >
-                                <a rel="prev" href="about/">
+                                <a rel="prev" href="DEMO/">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -83,6 +100,8 @@
             <li><a href="#functional-requirements">Functional requirements</a></li>
             <li><a href="#non-functional-requirements">Non-functional requirements</a></li>
             <li><a href="#logical-architecture">Logical architecture</a></li>
+            <li><a href="#landscape-diagram-of-the-services-used">Landscape diagram of the services used</a></li>
+            <li><a href="#setup-the-environment-and-deploy-the-cluster">Setup the environment and deploy the cluster</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
@@ -121,7 +140,23 @@
 <li>Infrastructure support for services around DNS mapping and Certificate installation.</li>
 </ul>
 <h2 id="logical-architecture">Logical architecture</h2>
-<p><img alt="Logical Architecture" src="img/LogicalArchitecture.jpg" /></p></div>
+<p><img alt="Logical Architecture" src="img/LogicalArchitecture.jpg" /></p>
+<h2 id="landscape-diagram-of-the-services-used">Landscape diagram of the services used</h2>
+<p>When custom code is checked into this repository, it triggers a Docker image build which stores the images into a private container registry that analyzes the security of the images. These images are then rolled out across the Kubernetes cluster through staging and production gates. Data from production can be synchronized back to staging to ensure the environments are as close as possible.</p>
+<p><img alt="" src="img/links.png" /></p>
+<h2 id="setup-the-environment-and-deploy-the-cluster">Setup the environment and deploy the cluster</h2>
+<h3 id="one-time-container-service-and-cloud-data-services-setup">One time Container Service and Cloud data services setup</h3>
+<p>See the Container Service Kubernetes and IBM Cloud services (MySQL, Redis, Memcached) <a href="docs/INITIAL-SETUP.md">configuration instructions</a>.</p>
+<h3 id="building-and-deploying-the-first-set-of-containers">Building and deploying the first set of containers</h3>
+<p>See the Docker container build and Kubernetes deployment <a href="docs/DEPLOY-CONTAINERS.md">instructions</a>.</p>
+<h3 id="ongoing-development-and-operations-with-github-commits">Ongoing development and operations with GitHub commits</h3>
+<p>See the ongoing development <a href="docs/ONGOING-DEVELOPMENT.md">instructions</a>. And the work in progress DevOps <a href="docs/PIPELINE-SETUP.md">pipeline docs</a>. This shows how container images are rebuilt and how to address security issues detected by the IBM Vulnerability Advisor.</p>
+<h3 id="synchronizing-data-from-production-back-to-staging">Synchronizing data from production back to staging</h3>
+<p>There are two <a href="docs/SYNCHRONIZING-DATA.md">synchronization scripts</a> that can be invoked to bring user generated changes to files or data from production back into the staging environment. You can also execute other scripts inside the containers as well.</p>
+<h3 id="security">Security</h3>
+<p>The web site uses TLS certificate to secure the data transfer. The domain is provided by <a href="https://cloud.ibm.com/catalog/infrastructure/domain_registration">IBM Cloud Domain name Service</a> and it is managed by <a href="https://cloud.ibm.com/catalog/services/internet-services">IBM Cloud Internet Service aka CIS</a>. <a href="https://cloud.ibm.com/catalog/services/certificate-manager">IBM Certificate Manager</a> store the certificate and has the ability to keep track of the expiration date of the certificate. IBM Certificate Manager is able to renew automatically the certificate before its expiration date. IBM Certificate Manager uses a webhook to an <a href="https://cloud.ibm.com/openwhisk/">IBM Function</a> (serverless) with a smart small code to renew the certificate. </p>
+<h3 id="license">License</h3>
+<p><a href="LICENSE.txt">Apache 2.0</a></p></div>
         </div>
 
         <footer class="col-md-12">
@@ -204,5 +239,5 @@
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2019-07-22 19:36:54
+Build Date UTC : 2019-07-23 09:07:19
 -->

@@ -8,7 +8,7 @@
         
         
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>Drupal sites on the IBM Container Service - Greenv2 MVP</title>
+        <title>Deployment - Greenv2 MVP</title>
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome.min.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
@@ -49,6 +49,23 @@
                             <li >
                                 <a href="..">Home</a>
                             </li>
+                            <li class="dropdown active">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li class="active">
+    <a href="./">Deployment</a>
+</li>
+                                    
+<li >
+    <a href="../CERTIFICATE-SETUP/">Certificates</a>
+</li>
+                                    
+<li >
+    <a href="../Drupal-Cloud-Object-Storage/">Cloud Object Storage</a>
+</li>
+                                </ul>
+                            </li>
                             <li >
                                 <a href="../about/">About</a>
                             </li>
@@ -60,6 +77,16 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
+                            <li >
+                                <a rel="next" href="..">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li >
+                                <a rel="prev" href="../CERTIFICATE-SETUP/">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
                     </ul>
                 </div>
             </div>
@@ -70,7 +97,7 @@
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#drupal-sites-on-the-ibm-container-service">Drupal sites on the IBM Container Service</a></li>
             <li><a href="#preamble-why-kubernetes">Preamble: Why Kubernetes?</a></li>
-            <li><a href="#what-this-proof-of-concept-shows">What this Proof of Concept shows</a></li>
+            <li><a href="#what-this-mvp-shows">What this MVP shows</a></li>
             <li><a href="#1-functional-drupal-site-running-on-the-ibm-cloud">1. Functional Drupal site running on the IBM Cloud</a></li>
             <li><a href="#2-clearly-defined-and-easy-to-implement-process-for-pushing-code-updates">2. Clearly defined and easy to implement process for pushing code updates</a></li>
             <li><a href="#3-synchronize-or-migrate-one-database-to-another-database">3. Synchronize or migrate one database to another database</a></li>
@@ -83,8 +110,8 @@
 <h2 id="preamble-why-kubernetes">Preamble: Why Kubernetes?</h2>
 <p>The shift towards cloud-native deployment models allows developers to package their applications consistently between staging and production, and helps them scale their deployments horizontally across a large pool of compute resources more quickly.</p>
 <p>In contrast to other cloud-native approaches - like Platform-as-a-Service with Heroku or Cloud Foundry - container orchestration system like Kubernetes are "less-opinionated" and offer a great amount of flexibility at the cost of a single prescribed set of guidelines, which can make them more attractive to those migrating from a virtual machine or bare metal approach rather than towards PaaS directly.</p>
-<h2 id="what-this-proof-of-concept-shows">What this Proof of Concept shows</h2>
-<p>This PoC shows how one might migrate a traditional web-server, application-server, and database-server based application into a container-based model that depends on cloud services in order to speed application development by reducing time spent on managing servers across a large deployment target environment.</p>
+<h2 id="what-this-mvp-shows">What this MVP shows</h2>
+<p>This MVP shows how one might migrate a traditional web-server, application-server, and database-server based application into a container-based model that depends on cloud services in order to speed application development by reducing time spent on managing servers across a large deployment target environment.</p>
 <ol>
 <li><a href="#1-functional-drupal-site-running-on-the-ibm-cloud">Functional Drupal site running on the IBM Cloud</a></li>
 <li><a href="#2-clearly-defined-and-easy-to-implement-process-for-pushing-code-updates">Clearly defined and easy to implement process for pushing code updates</a></li>
