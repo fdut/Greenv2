@@ -5,8 +5,8 @@ The shift towards cloud-native deployment models allows developers to package th
 
 In contrast to other cloud-native approaches - like Platform-as-a-Service with Heroku or Cloud Foundry - container orchestration system like Kubernetes are "less-opinionated" and offer a great amount of flexibility at the cost of a single prescribed set of guidelines, which can make them more attractive to those migrating from a virtual machine or bare metal approach rather than towards PaaS directly.
 
-## What this Proof of Concept shows
-This PoC shows how one might migrate a traditional web-server, application-server, and database-server based application into a container-based model that depends on cloud services in order to speed application development by reducing time spent on managing servers across a large deployment target environment.
+## What this MVP shows
+This MVP shows how one might migrate a traditional web-server, application-server, and database-server based application into a container-based model that depends on cloud services in order to speed application development by reducing time spent on managing servers across a large deployment target environment.
 
 1. [Functional Drupal site running on the IBM Cloud](#1-functional-drupal-site-running-on-the-ibm-cloud)
 2. [Clearly defined and easy to implement process for pushing code updates](#2-clearly-defined-and-easy-to-implement-process-for-pushing-code-updates)

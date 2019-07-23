@@ -1,0 +1,26 @@
+site_name: Greenv2 MVP
+site_url: https://www.greenv2.com
+site_description: Project documentation about Greenv2 MVP.
+site_author: Greenv2 Team
+
+repo_url: https://github.ibm.com/frederic-dutheil/Greenv2
+
+nav:
+    - Home: index.md
+    - Environment Setup :
+        - Deployment: DEMO.md
+        - Certificates: CERTIFICATE-SETUP.md
+        - 'Cloud Object Storage': 'Drupal-Cloud-Object-Storage.md' 
+    - About: about.md
+
+extra_css:
+    - css/extra.css
+
+theme:
+    name: mkdocs
+    highlightjs: true
+    hljs_languages:
+        - yaml
+        - django
+
+#theme: readthedocs
