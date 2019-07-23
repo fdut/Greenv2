@@ -35,15 +35,25 @@ dd {
 
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
     color: #fff;
-    background-color: #33a42c;
+    background-color: #73a839;
 }
 
 .navbar-default {
-    background-color: #33a42c;
+    background-color: #73a839;
     border-color: #33a42c;
 }
 
 .navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus {
     color: #fff;
-    background-color: #33a42c;
+    background-color: #73a839;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
+    color: #fff;
+    background-color: #73a839;
+}
+
+ul.nav.bs-sidenav> li.main.active> a, ul.nav.bs-sidenav > li >a {
+    color: #468847;
+    text-decoration: none;
 }
