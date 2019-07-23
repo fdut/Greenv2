@@ -6,6 +6,9 @@ Project documentation with&nbsp;Markdown.
 
 ## Project Context
 
+The customer needs to maintain multiple websites both from a content point of view as well as from the CMS software point of view. Spinning up VSI's for each website and updating manually all of these boxes would be very time consuming (and also expensive).
+By running the CMS software in containers and managing software updates out of github, updating all the websites can be highly automated through CI/CD. This will also involve using one or more of our Database as a Service offerings to manage to content and/or adding CIS on top for global load balancing.
+
 - Client requires CMS-as-a-Service
 - Drupal is the CMS technology of choice
 - Many competitors in this space; mostly open source

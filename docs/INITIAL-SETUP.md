@@ -1,3 +1,9 @@
+# Initial Setup
+
+Guide to all available configuration settings.
+
+---
+
 ## Provision a Kubernetes cluster on the IBM Cloud Container Service
 - Create a paid IBM Cloud account, and log into the dashboard.
 - Choose Containers from the left hand hamburger navigation.

@@ -1,5 +1,9 @@
 # Drupal sites on the IBM Container Service
 
+Guide to all available configuration settings.
+
+---
+
 ## Preamble: Why Kubernetes?
 The shift towards cloud-native deployment models allows developers to package their applications consistently between staging and production, and helps them scale their deployments horizontally across a large pool of compute resources more quickly.
 

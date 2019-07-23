@@ -1,5 +1,9 @@
 # TLS-CERTIFICATE Deployment and Usage
 
+Guide to all available configuration settings.
+
+---
+
 ## IBM Cloud Documentation reference
 This documentation is based on [How to deploy a certificate to an IKS cluster in IBM Cloud documentation](https://cloud.ibm.com/docs/containers?topic=containers-cli-plugin-kubernetes-service-cli#cs_alb_cert_deploy).
 You might have to update your laptop plugin first [here](https://cloud.ibm.com/docs/containers?topic=containers-cli-plugin-kubernetes-service-cli#cs_beta).

@@ -7,8 +7,10 @@ repo_url: https://github.ibm.com/frederic-dutheil/Greenv2
 
 nav:
     - Home: index.md
-    - Environment Setup :
-        - Deployment: DEMO.md
+    - User Guide :
+        - Overview: DEMO.md
+        - Initial Setup: INITIAL-SETUP.md
+        - Deployment: DEPLOY-CONTAINERS.md
         - Certificates: CERTIFICATE-SETUP.md
         - 'Cloud Object Storage': 'Drupal-Cloud-Object-Storage.md' 
     - About: about.md

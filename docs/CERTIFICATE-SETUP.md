@@ -1,6 +1,10 @@
 # TLS-CERTIFICATE Setup
 
-## Prerequesite : IBM Cloud Account
+Guide to all available configuration settings.
+
+---
+
+**Prerequesite : IBM Cloud Account**
 
 ## IBM Cloud Components needed
 The project needs to have a secure website based on TLS encryption, hence https protocol is used, this latter needs a valid and up-to-date certificate.

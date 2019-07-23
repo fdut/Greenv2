@@ -1,5 +1,9 @@
 # Toolchain Introduction
 
+Guide to all available configuration settings.
+
+---
+
 This toolchain will enable your containers to automatically build and push to a registry as well as deploy to a Kubernetes cluster hosted on the IBM Cloud. This toolchain will be comprised of multiple pipelines, one for each major component of the cluster. Ideally there would be four different layers in build/deploy process:
 
   1. Push code to repository

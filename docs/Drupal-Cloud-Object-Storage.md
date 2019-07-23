@@ -1,5 +1,9 @@
 # Drupal on IBM Cloud Object Storage
 
+Guide to all available configuration settings.
+
+---
+
 ## IKS integration with IBM Cloud Object Storage
 **[Follow the instructions in this link to setup your IKS instance](https://cloud.ibm.com/docs/containers?topic=containers-object_storage)**
 
