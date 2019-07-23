@@ -53,11 +53,19 @@
                                 <a href="..">Home</a>
                             </li>
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Environment Setup <b class="caret"></b></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li >
-    <a href="../DEMO/">Deployment</a>
+    <a href="../DEMO/">Overview</a>
+</li>
+                                    
+<li >
+    <a href="../INITIAL-SETUP/">Initial Setup</a>
+</li>
+                                    
+<li >
+    <a href="../DEPLOY-CONTAINERS/">Deployment</a>
 </li>
                                     
 <li >
@@ -98,6 +106,8 @@
                 <div class="col-md-9" role="main">
 
 <h1 id="toolchain-introduction">Toolchain Introduction</h1>
+<p>Guide to all available configuration settings.</p>
+<hr />
 <p>This toolchain will enable your containers to automatically build and push to a registry as well as deploy to a Kubernetes cluster hosted on the IBM Cloud. This toolchain will be comprised of multiple pipelines, one for each major component of the cluster. Ideally there would be four different layers in build/deploy process:</p>
 <ol>
 <li>Push code to repository</li>

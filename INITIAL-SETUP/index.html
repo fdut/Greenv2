@@ -8,7 +8,7 @@
         <meta name="author" content="Greenv2 Team">
         <link rel="canonical" href="https://www.greenv2.com/INITIAL-SETUP/">
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>INITIAL SETUP - Greenv2 MVP</title>
+        <title>Initial Setup - Greenv2 MVP</title>
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome.min.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
@@ -52,12 +52,20 @@
                             <li >
                                 <a href="..">Home</a>
                             </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Environment Setup <b class="caret"></b></a>
+                            <li class="dropdown active">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li >
-    <a href="../DEMO/">Deployment</a>
+    <a href="../DEMO/">Overview</a>
+</li>
+                                    
+<li class="active">
+    <a href="./">Initial Setup</a>
+</li>
+                                    
+<li >
+    <a href="../DEPLOY-CONTAINERS/">Deployment</a>
 </li>
                                     
 <li >
@@ -80,6 +88,16 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
+                            <li >
+                                <a rel="next" href="../DEMO/">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li >
+                                <a rel="prev" href="../DEPLOY-CONTAINERS/">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
                             <li>
                                 <a href="https://github.ibm.com/frederic-dutheil/Greenv2">Github</a>
                             </li>
@@ -91,15 +109,19 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#provision-a-kubernetes-cluster-on-the-ibm-cloud-container-service">Provision a Kubernetes cluster on the IBM Cloud Container Service</a></li>
-        <li class="main "><a href="#connect-to-your-kubernetes-cluster-from-your-workstation">Connect to your Kubernetes cluster from your workstation</a></li>
-        <li class="main "><a href="#provision-and-bind-two-mysql-as-a-service-instances">Provision and bind two MySQL-as-a-Service instances</a></li>
-        <li class="main "><a href="#provision-and-bind-a-redis-as-a-service">Provision and bind a Redis-as-a-Service</a></li>
-        <li class="main "><a href="#provision-and-bind-a-memcached-as-a-service">Provision and bind a Memcached-as-a-Service</a></li>
+        <li class="main active"><a href="#initial-setup">Initial Setup</a></li>
+            <li><a href="#provision-a-kubernetes-cluster-on-the-ibm-cloud-container-service">Provision a Kubernetes cluster on the IBM Cloud Container Service</a></li>
+            <li><a href="#connect-to-your-kubernetes-cluster-from-your-workstation">Connect to your Kubernetes cluster from your workstation</a></li>
+            <li><a href="#provision-and-bind-two-mysql-as-a-service-instances">Provision and bind two MySQL-as-a-Service instances</a></li>
+            <li><a href="#provision-and-bind-a-redis-as-a-service">Provision and bind a Redis-as-a-Service</a></li>
+            <li><a href="#provision-and-bind-a-memcached-as-a-service">Provision and bind a Memcached-as-a-Service</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
+<h1 id="initial-setup">Initial Setup</h1>
+<p>Guide to all available configuration settings.</p>
+<hr />
 <h2 id="provision-a-kubernetes-cluster-on-the-ibm-cloud-container-service">Provision a Kubernetes cluster on the IBM Cloud Container Service</h2>
 <ul>
 <li>Create a paid IBM Cloud account, and log into the dashboard.</li>

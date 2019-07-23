@@ -8,7 +8,7 @@
         <meta name="author" content="Greenv2 Team">
         <link rel="canonical" href="https://www.greenv2.com/DEMO/">
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>Deployment - Greenv2 MVP</title>
+        <title>Overview - Greenv2 MVP</title>
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome.min.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
@@ -53,11 +53,19 @@
                                 <a href="..">Home</a>
                             </li>
                             <li class="dropdown active">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Environment Setup <b class="caret"></b></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li class="active">
-    <a href="./">Deployment</a>
+    <a href="./">Overview</a>
+</li>
+                                    
+<li >
+    <a href="../INITIAL-SETUP/">Initial Setup</a>
+</li>
+                                    
+<li >
+    <a href="../DEPLOY-CONTAINERS/">Deployment</a>
 </li>
                                     
 <li >
@@ -86,7 +94,7 @@
                                 </a>
                             </li>
                             <li >
-                                <a rel="prev" href="../CERTIFICATE-SETUP/">
+                                <a rel="prev" href="../INITIAL-SETUP/">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -113,6 +121,8 @@
                 <div class="col-md-9" role="main">
 
 <h1 id="drupal-sites-on-the-ibm-container-service">Drupal sites on the IBM Container Service</h1>
+<p>Guide to all available configuration settings.</p>
+<hr />
 <h2 id="preamble-why-kubernetes">Preamble: Why Kubernetes?</h2>
 <p>The shift towards cloud-native deployment models allows developers to package their applications consistently between staging and production, and helps them scale their deployments horizontally across a large pool of compute resources more quickly.</p>
 <p>In contrast to other cloud-native approaches - like Platform-as-a-Service with Heroku or Cloud Foundry - container orchestration system like Kubernetes are "less-opinionated" and offer a great amount of flexibility at the cost of a single prescribed set of guidelines, which can make them more attractive to those migrating from a virtual machine or bare metal approach rather than towards PaaS directly.</p>

@@ -53,11 +53,19 @@
                                 <a href=".">Home</a>
                             </li>
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Environment Setup <b class="caret"></b></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li >
-    <a href="DEMO/">Deployment</a>
+    <a href="DEMO/">Overview</a>
+</li>
+                                    
+<li >
+    <a href="INITIAL-SETUP/">Initial Setup</a>
+</li>
+                                    
+<li >
+    <a href="DEPLOY-CONTAINERS/">Deployment</a>
 </li>
                                     
 <li >
@@ -116,6 +124,8 @@
 <p>Project documentation with&nbsp;Markdown.</p>
 <hr />
 <h2 id="project-context">Project Context</h2>
+<p>The customer needs to maintain multiple websites both from a content point of view as well as from the CMS software point of view. Spinning up VSI's for each website and updating manually all of these boxes would be very time consuming (and also expensive).
+By running the CMS software in containers and managing software updates out of github, updating all the websites can be highly automated through CI/CD. This will also involve using one or more of our Database as a Service offerings to manage to content and/or adding CIS on top for global load balancing.</p>
 <ul>
 <li>Client requires CMS-as-a-Service</li>
 <li>Drupal is the CMS technology of choice</li>
@@ -247,5 +257,5 @@
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2019-07-23 09:38:55
+Build Date UTC : 2019-07-23 11:36:56
 -->
