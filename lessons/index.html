@@ -6,9 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <meta name="author" content="Greenv2 Team">
-        <link rel="canonical" href="https://www.greenv2.com/ONGOING-DEVELOPMENT/">
+        <link rel="canonical" href="https://www.greenv2.com/lessons/">
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>ONGOING DEVELOPMENT - Greenv2 MVP</title>
+        <title>Lessons Learned - Greenv2 MVP</title>
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome.min.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
@@ -77,8 +77,8 @@
 </li>
                                 </ul>
                             </li>
-                            <li >
-                                <a href="../lessons/">Lessons Learned</a>
+                            <li class="active">
+                                <a href="./">Lessons Learned</a>
                             </li>
                             <li >
                                 <a href="../appmodernizationmap/">App Modernization Map</a>
@@ -94,6 +94,16 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
+                            <li >
+                                <a rel="next" href="../Drupal-Cloud-Object-Storage/">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li >
+                                <a rel="prev" href="../appmodernizationmap/">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
                             <li>
                                 <a href="https://github.ibm.com/frederic-dutheil/Greenv2">Github</a>
                             </li>
@@ -105,29 +115,39 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#ongoing-development">Ongoing development</a></li>
-        <li class="main "><a href="#updating-the-base-image-configuration">Updating the base image configuration</a></li>
-        <li class="main "><a href="#updating-the-drupal-and-code-version">Updating the Drupal and code version</a></li>
-        <li class="main "><a href="#addressing-security-issues-with-vulnerability-advisor">Addressing security issues with Vulnerability Advisor</a></li>
+        <li class="main active"><a href="#lessons-learned">Lessons Learned</a></li>
+            <li><a href="#ibm-kubernetes-service-iks">IBM Kubernetes Service (IKS)</a></li>
+            <li><a href="#security">Security</a></li>
+            <li><a href="#drupal">Drupal</a></li>
+            <li><a href="#continious-delivery-toolchain">Continious delivery Toolchain</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h2 id="ongoing-development">Ongoing development</h2>
-<p>Now that the Kubernetes cluster is provisioned and you have a set of containers running, the ongoing DevOps workflow will be to write code locally, push that to GitHub into the <code>config</code> or <code>code</code> directories, and that in turn will start a job to rebuild the container images with the versioned code. These images are in turn pushed to the private Docker registry, and pulled to run on the pods.</p>
-<h2 id="updating-the-base-image-configuration">Updating the base image configuration</h2>
-<p>Push updates to the <code>config</code> directory. The pipeline will detect changes and initiate a base image rebuild, and then another build on top for the <code>code</code> files.</p>
-<h2 id="updating-the-drupal-and-code-version">Updating the Drupal and code version</h2>
-<p>Push updates to the <code>code</code> directory. The pipeline will detect changes and initiate a custom image rebuild.</p>
-<h2 id="addressing-security-issues-with-vulnerability-advisor">Addressing security issues with Vulnerability Advisor</h2>
-<p>As container images are built and pushed to the IBM Cloud Container Registry, they are automatically scanned by the Vulnerability Advisor.</p>
-<p>You can see whether there are any vulnerabilities in your images by listing the images:</p>
-<pre><code class="bash">ibmcloud cr images
-</code></pre>
-
-<p>If any of them are listed as <code>Vulnerable</code> you can then see the specific issues with:</p>
-<pre><code class="bash">ibmcloud cr va $IMAGE_NAME
-</code></pre></div>
+<h1 id="lessons-learned">Lessons Learned</h1>
+<hr />
+<h2 id="ibm-kubernetes-service-iks">IBM Kubernetes Service (IKS)</h2>
+<ul>
+<li>Very simply to create your first kubernetes cluster</li>
+<li>Understand how to use persistent storage on IKS with different offering. </li>
+<li>How to use Cloud Object Storage (COS) as persistent volume and integration with IKS</li>
+</ul>
+<h2 id="security">Security</h2>
+<ul>
+<li>Capability to create and manage certificates with IBM Cloud offering : IBM Certificat Manager, IBM Cloud Internet Service, IBM Cloud Domain Name Service</li>
+<li>Vulnarability in the docker images. IBM Cloud platform provide the capability to check the vulnerability of an image. Each vulnarability is notified in the image registry dashboard</li>
+</ul>
+<h2 id="drupal">Drupal</h2>
+<ul>
+<li>Need to understand how Drupal ecosystem works: requirement, customisation and tools to manage it (drush)</li>
+<li>Using compose to create the docker image.</li>
+</ul>
+<h2 id="continious-delivery-toolchain">Continious delivery Toolchain</h2>
+<ul>
+<li>Using toolchain to create a delivery pipeline to create and deploy image </li>
+<li>Add Github update event to start the delivery pipeline</li>
+<li>Use Slack to be notified for delivery pipeline exection and status.</li>
+</ul></div>
         </div>
 
         <footer class="col-md-12">

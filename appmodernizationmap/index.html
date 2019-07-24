@@ -6,9 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <meta name="author" content="Greenv2 Team">
-        <link rel="canonical" href="https://www.greenv2.com/ONGOING-DEVELOPMENT/">
+        <link rel="canonical" href="https://www.greenv2.com/appmodernizationmap/">
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>ONGOING DEVELOPMENT - Greenv2 MVP</title>
+        <title>App Modernization Map - Greenv2 MVP</title>
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome.min.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
@@ -80,8 +80,8 @@
                             <li >
                                 <a href="../lessons/">Lessons Learned</a>
                             </li>
-                            <li >
-                                <a href="../appmodernizationmap/">App Modernization Map</a>
+                            <li class="active">
+                                <a href="./">App Modernization Map</a>
                             </li>
                             <li >
                                 <a href="../about/">About</a>
@@ -94,6 +94,16 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
+                            <li >
+                                <a rel="next" href="../lessons/">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li >
+                                <a rel="prev" href="../about/">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
                             <li>
                                 <a href="https://github.ibm.com/frederic-dutheil/Greenv2">Github</a>
                             </li>
@@ -105,29 +115,51 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#ongoing-development">Ongoing development</a></li>
-        <li class="main "><a href="#updating-the-base-image-configuration">Updating the base image configuration</a></li>
-        <li class="main "><a href="#updating-the-drupal-and-code-version">Updating the Drupal and code version</a></li>
-        <li class="main "><a href="#addressing-security-issues-with-vulnerability-advisor">Addressing security issues with Vulnerability Advisor</a></li>
+        <li class="main active"><a href="#app-modernization-map">App Modernization Map</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h2 id="ongoing-development">Ongoing development</h2>
-<p>Now that the Kubernetes cluster is provisioned and you have a set of containers running, the ongoing DevOps workflow will be to write code locally, push that to GitHub into the <code>config</code> or <code>code</code> directories, and that in turn will start a job to rebuild the container images with the versioned code. These images are in turn pushed to the private Docker registry, and pulled to run on the pods.</p>
-<h2 id="updating-the-base-image-configuration">Updating the base image configuration</h2>
-<p>Push updates to the <code>config</code> directory. The pipeline will detect changes and initiate a base image rebuild, and then another build on top for the <code>code</code> files.</p>
-<h2 id="updating-the-drupal-and-code-version">Updating the Drupal and code version</h2>
-<p>Push updates to the <code>code</code> directory. The pipeline will detect changes and initiate a custom image rebuild.</p>
-<h2 id="addressing-security-issues-with-vulnerability-advisor">Addressing security issues with Vulnerability Advisor</h2>
-<p>As container images are built and pushed to the IBM Cloud Container Registry, they are automatically scanned by the Vulnerability Advisor.</p>
-<p>You can see whether there are any vulnerabilities in your images by listing the images:</p>
-<pre><code class="bash">ibmcloud cr images
-</code></pre>
-
-<p>If any of them are listed as <code>Vulnerable</code> you can then see the specific issues with:</p>
-<pre><code class="bash">ibmcloud cr va $IMAGE_NAME
-</code></pre></div>
+<h1 id="app-modernization-map">App Modernization Map</h1>
+<hr />
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Technology used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Architecture</td>
+<td>Microservices</td>
+</tr>
+<tr>
+<td>Delivery</td>
+<td>DevOps Toolchain</td>
+</tr>
+<tr>
+<td>Infrastructure</td>
+<td>Kubernetes Cluster (IKS)</td>
+</tr>
+<tr>
+<td>Multi-cloud</td>
+<td>Single Cloud Vendor (IBM Cloud)</td>
+</tr>
+<tr>
+<td>Open</td>
+<td>Flexible Architecture with Open Components (Drupal, MySQL, Redis ...)</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Protected with Certs (IBM Cloud Sercurity offering)</td>
+</tr>
+<tr>
+<td>Networking</td>
+<td>Customized Networking (Feature: using netwok policy)</td>
+</tr>
+</tbody>
+</table></div>
         </div>
 
         <footer class="col-md-12">
