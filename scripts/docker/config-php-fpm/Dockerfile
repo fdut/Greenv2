@@ -4,7 +4,7 @@ ARG PHP_FPM_VERSION=7.1-fpm
 
 FROM php:${PHP_FPM_VERSION}
 
-LABEL Description="Config Image for php-fpm" Vendor="Greenv2" Version="0.0.1"
+LABEL Description="Config Image for php-fpm" Vendor="Greenv2" Version="0.0.2"
 
 # Set consistent timezone
 ENV CONTAINER_TIMEZONE="UTC"
