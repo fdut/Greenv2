@@ -4,6 +4,8 @@ ARG PHP_FPM_VERSION=7.1-fpm
 
 FROM php:${PHP_FPM_VERSION}
 
+LABEL Description="Config Image for php-fpm" Vendor="Greenv2" Version="1.0.0"
+
 # Set consistent timezone
 ENV CONTAINER_TIMEZONE="UTC"
 RUN rm -f /etc/localtime \

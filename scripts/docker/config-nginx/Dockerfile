@@ -4,7 +4,7 @@ ARG NGINX_VERSION=latest
 
 FROM nginx:${NGINX_VERSION}
 
-LABEL Description="FDUT: Base Image for nginx." Vendor="Greenv2" Version="1.0"
+LABEL Description="Config Image for nginx." Vendor="Greenv2" Version="1.0.0"
 
 # Set consistent timezone
 ENV CONTAINER_TIMEZONE="UTC"
