@@ -4,7 +4,7 @@ ARG PHP_CLI_VERSION=7.1-cli
 
 FROM php:${PHP_CLI_VERSION}
 
-LABEL Description="Config Image for php-cli" Vendor="Greenv2" Version="0.0.2"
+LABEL Description="Config Image for php-cli" Vendor="Greenv2" Version="0.0.3"
 
 # Set consistent timezone
 ENV CONTAINER_TIMEZONE="UTC"
