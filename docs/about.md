@@ -9,9 +9,9 @@
 
 We would like to thank people below for their support to help accomplish this MVP
 
-* Marty van de Korput (SME assigned to Greenv2 MVP)
+* Marty van de Korput 
+* Olaf Kuilboer
 * Steve Lievens
-* Olaf Kuilboer (for help about drupal)
 
 ## Useful links
 
