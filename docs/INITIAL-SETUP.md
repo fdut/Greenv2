@@ -95,7 +95,7 @@ For Compose, the credentials will be shown right before you create the service.
  From the menu on the top left, select Kubernetes -> Helm Catalog and filter with ex: memca to see the available charts.
  
  
-   ! [] (img/memcached_Pic1.png)
+  ! [](img/memcached_Pic1.png)
       
       
  Select Memcached v2.9.0 
