@@ -95,11 +95,14 @@ For Compose, the credentials will be shown right before you create the service.
  From the menu on the top left, select Kubernetes -> Helm Catalog and filter with ex: memca to see the available charts.
  
  
-      ![](img/memcached_Pic1.png)
+   ! [] (img/memcached_Pic1.png)
+      
       
  Select Memcached v2.9.0 
  
-      ![](img/memcached_Pic2.png)
+   ![](img/memcached_Pic2.png)
+   
+   
  In order to install the chart, follow the below instructions
 helm:
 
@@ -127,5 +130,5 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install bitnami/memcached -name agd-memcached
 
 
-     ![](img/memcached_Pic3.png)
+   ![](img/memcached_Pic3.png)
 
