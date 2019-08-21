@@ -120,7 +120,7 @@
             <li><a href="#connect-to-your-kubernetes-cluster-from-your-workstation">Connect to your Kubernetes cluster from your workstation</a></li>
             <li><a href="#provision-and-bind-two-mysql-as-a-service-instances">Provision and bind two MySQL-as-a-Service instances</a></li>
             <li><a href="#provision-and-bind-a-redis-as-a-service">Provision and bind a Redis-as-a-Service</a></li>
-            <li><a href="#provision-and-bind-a-memcached-as-a-service">Provision and bind a Memcached-as-a-Service</a></li>
+            <li><a href="#provision-a-memcached-instance">Provision a Memcached instance</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
@@ -223,25 +223,27 @@
 <p><img alt="" src="../img/14-redis-credentials.png" /></p>
 </li>
 </ul>
-<h2 id="provision-and-bind-a-memcached-as-a-service">Provision and bind a Memcached-as-a-Service</h2>
-<ul>
-<li>You can do this with the <code>bx</code> command too, but I prefer to work with the dashboard as it's a one time setup operation with several options.</li>
-<li>
-<p>Go to the hamburger navigation again and choose Data &amp; Analytics.</p>
-<p><img alt="" src="../img/7-hamburger-data-analytics.png" /></p>
-</li>
-<li>
-<p>Click "Create"</p>
-<p><img alt="" src="../img/8-create-data-analytics.png" /></p>
-</li>
-<li>
-<p>Choose Memcached from Redis Cloud.</p>
-<p><img alt="" src="../img/11-create-memcached-service.png" /></p>
-</li>
-<li>
-<p>Take note of the credentials, and save them in <code>scripts/kubernetes/secrets/service-credentials.txt</code>.</p>
-</li>
-</ul></div>
+<h2 id="provision-a-memcached-instance">Provision a Memcached instance</h2>
+<p>There is currently no cloud foundry service on IBM Cloud for Memcached.</p>
+<p>As an alternative we’ll deploy the Memcached helm chart available to deploy on IKS cluster.</p>
+<p>From the menu on the top left, select Kubernetes -&gt; Helm Catalog and filter with ex: memca to see the available charts.</p>
+<p>! <a href="../img/memcached_Pic1.png"></a></p>
+<p>Select Memcached v2.9.0 </p>
+<p><img alt="" src="../img/memcached_Pic2.png" /></p>
+<p>In order to install the chart, follow the below instructions
+helm:</p>
+<p>cd ~
+wget https://kubernetes-helm.storage.googleapis.com/helm-v2.14.0-linux-amd64.tar.gz</p>
+<p>mkdir helm-v2.14.0
+tar zxfv helm-v2.14.0-linux-amd64.tar.gz -C helm-v2.14.0</p>
+<p>export PATH="$(echo ~)/helm-v2.14.0/linux-amd64:$PATH"</p>
+<p>helm init</p>
+<p>kubectl create serviceaccount --namespace kube-system tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'</p>
+<p>helm repo add bitnami https://charts.bitnami.com/bitnami</p>
+<p>helm install bitnami/memcached -name agd-memcached</p>
+<p><img alt="" src="../img/memcached_Pic3.png" /></p></div>
         </div>
 
         <footer class="col-md-12">
