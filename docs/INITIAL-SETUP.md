@@ -86,25 +86,46 @@ For Compose, the credentials will be shown right before you create the service.
 
     ![](img/14-redis-credentials.png)
 
-## Provision and bind a Memcached-as-a-Service
-- You can do this with the `bx` command too, but I prefer to work with the dashboard as it's a one time setup operation with several options.
-- Go to the hamburger navigation again and choose Data & Analytics.
-
-    ![](img/7-hamburger-data-analytics.png)
-
-- Click "Create"
-
-    ![](img/8-create-data-analytics.png)
-
-- Choose Memcached from Redis Cloud.
-
-    ![](img/11-create-memcached-service.png)
-
-- Take note of the credentials, and save them in `scripts/kubernetes/secrets/service-credentials.txt`.
+## Provision a Memcached instance
 
  There is currently no cloud foundry service on IBM Cloud for Memcached.
 
  As an alternative we’ll deploy the Memcached helm chart available to deploy on IKS cluster.
 
  From the menu on the top left, select Kubernetes -> Helm Catalog and filter with ex: memca to see the available charts.
+ 
+ 
       ![](img/memcached_Pic1.png)
+      
+ Select Memcached v2.9.0 
+ 
+      ![](img/memcached_Pic2.png)
+ In order to install the chart, follow the below instructions
+helm:
+
+
+cd ~
+wget https://kubernetes-helm.storage.googleapis.com/helm-v2.14.0-linux-amd64.tar.gz
+
+
+
+mkdir helm-v2.14.0
+tar zxfv helm-v2.14.0-linux-amd64.tar.gz -C helm-v2.14.0
+
+
+export PATH="$(echo ~)/helm-v2.14.0/linux-amd64:$PATH"
+
+helm init
+
+kubectl create serviceaccount --namespace kube-system tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+helm install bitnami/memcached -name agd-memcached
+
+
+     ![](img/memcached_Pic3.png)
+
