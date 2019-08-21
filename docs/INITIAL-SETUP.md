@@ -101,3 +101,10 @@ For Compose, the credentials will be shown right before you create the service.
     ![](img/11-create-memcached-service.png)
 
 - Take note of the credentials, and save them in `scripts/kubernetes/secrets/service-credentials.txt`.
+
+There is currently no cloud foundry service on IBM Cloud for Memcached.
+
+As an alternative we’ll deploy the Memcached helm chart available to deploy on IKS cluster.
+
+From the menu on the top left, select Kubernetes -> Helm Catalog and filter with ex: memca to see the available charts.
+
