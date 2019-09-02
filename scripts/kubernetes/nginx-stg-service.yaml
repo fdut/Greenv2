@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: nginx-stg
 spec:
-  loadBalancerIP: 169.50.91.11  # Change to public from kubectl get cm ibm-cloud-provider-vlan-ip-config -n kube-system -o yaml
+  loadBalancerIP: 169.50.91.118  # Change to public from kubectl get cm ibm-cloud-provider-vlan-ip-config -n kube-system -o yaml
   ports:
     - port: 80
       protocol: TCP
