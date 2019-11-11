@@ -1,8 +1,8 @@
 ## Team members
 
-* [Abdoul Gadiri Diallo](abdoul.gadiri.diallo@be.ibm.com)
-* [Frédéric Dutheil](frederic_dutheil@fr.ibm.com)
-* [Vann Lam](vann.lam@fr.ibm.com)
+* Frédéric Dutheil] - frederic_dutheil@fr.ibm.com
+* Abdoul Gadiri Diallo - abdoul.gadiri.diallo@be.ibm.com
+* Vann Lam - vann.lam@fr.ibm.com
 
 ## Useful links
 
