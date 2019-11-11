@@ -7,17 +7,17 @@ metadata:
 spec:
   tls:
   - hosts:
-    - www.greenv2.com
+    - xxx.xxxxx.com
     secretName: tls-secret
   rules:
-  - host: greenv2.eu-gb.containers.appdomain.cloud #find by running ibmcloud cs cluster-get <cluster name>
+  - host: xxxxx.xxxxx.xxxxxx.cloud #find by running ibmcloud cs cluster-get <cluster name>
     http:
       paths:
       - path: /
         backend:
           serviceName: nginx-stg
           servicePort: 80
-  - host: www.greenv2.com
+  - host: xxxx.xxxx.com
     http:
       paths:
       - path: /

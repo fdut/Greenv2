@@ -30,7 +30,7 @@ spec:
           env: 
             - 
               name: MYSQL_ROOT_PASSWORD
-              value: m1+s@lpwd
+              value: xxxxxx
             - 
               name: MYSQL_DATABASE
               value: drupal-database

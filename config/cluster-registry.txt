@@ -1,2 +1,2 @@
 CLUSTER_REGISTRY_NAMESPACE=greenv2-ns
-CLUSTER_REGISTRY_URL=uk.icr.io   #registry url on cloud.ibm.com uk.icr.io or de.icr.io --
+CLUSTER_REGISTRY_URL=xxx.xxx.io   #registry url on cloud.ibm.com uk.icr.io or de.icr.io --

@@ -7,7 +7,7 @@ metadata:
     ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: drupal.159.8.90.132.nip.io
+  - host: drupal.XXX.X.XX.XXX.nip.io
     http:
       paths:
         - path: /
