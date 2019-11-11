@@ -12,9 +12,7 @@ nav:
         - Initial Setup: INITIAL-SETUP.md
         - Deployment: DEPLOY-CONTAINERS.md
         - Certificates: CERTIFICATE-SETUP.md
-        - 'Cloud Object Storage': 'Drupal-Cloud-Object-Storage.md' 
-    - Lessons Learned: lessons.md
-    - App Modernization Map: appmodernizationmap.md
+        - Cloud Object Storage: Drupal-Cloud-Object-Storage.md
     - About: about.md
 
 extra_css:
