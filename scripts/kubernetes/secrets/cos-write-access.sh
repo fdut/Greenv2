@@ -1,1 +1,1 @@
-kubectl create secret generic cos-write-access --type=ibm/ibmc-s3fs --from-literal=access-key=e38aee55fb614f69a1fa147b2c730761 --from-literal=secret-key=778974a289f3168adb613b01f11b1faf24f6a2a5032146e5 -n default
+kubectl create secret generic cos-write-access --type=ibm/ibmc-s3fs --from-literal=access-key=xxxx --from-literal=secret-key=xxxx -n default
