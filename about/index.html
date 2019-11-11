@@ -77,12 +77,6 @@
 </li>
                                 </ul>
                             </li>
-                            <li >
-                                <a href="../lessons/">Lessons Learned</a>
-                            </li>
-                            <li >
-                                <a href="../appmodernizationmap/">App Modernization Map</a>
-                            </li>
                             <li class="active">
                                 <a href="./">About</a>
                             </li>
@@ -95,7 +89,7 @@
                             </a>
                         </li>
                             <li >
-                                <a rel="next" href="../appmodernizationmap/">
+                                <a rel="next" href="../Drupal-Cloud-Object-Storage/">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
@@ -117,6 +111,12 @@
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#team-members">Team members</a></li>
         <li class="main "><a href="#useful-links">Useful links</a></li>
+        <li class="main "><a href="#app-modernization-map">App Modernization Map</a></li>
+        <li class="main "><a href="#lessons-learned">Lessons Learned</a></li>
+            <li><a href="#ibm-kubernetes-service-iks">IBM Kubernetes Service (IKS)</a></li>
+            <li><a href="#security">Security</a></li>
+            <li><a href="#drupal">Drupal</a></li>
+            <li><a href="#continious-delivery-toolchain">Continious delivery Toolchain</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
@@ -131,6 +131,69 @@
 <ul>
 <li><a href="https://www.bluesight.io/squads/18546/board">Kanban Project</a> overview with Bluesight</li>
 <li><a href="https://github.com/fdut/Greenv2">GitHub repository</a></li>
+</ul>
+<h2 id="app-modernization-map">App Modernization Map</h2>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Technology used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Architecture</td>
+<td>Microservices</td>
+</tr>
+<tr>
+<td>Delivery</td>
+<td>DevOps Toolchain</td>
+</tr>
+<tr>
+<td>Infrastructure</td>
+<td>Kubernetes Cluster (IKS)</td>
+</tr>
+<tr>
+<td>Multi-cloud</td>
+<td>Single Cloud Vendor (IBM Cloud)</td>
+</tr>
+<tr>
+<td>Open</td>
+<td>Flexible Architecture with Open Components (Drupal, MySQL, Redis ...)</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Protected with Certs (IBM Cloud Sercurity offering)</td>
+</tr>
+<tr>
+<td>Networking</td>
+<td>Customized Networking (Feature: using netwok policy)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lessons-learned">Lessons Learned</h2>
+<hr />
+<h3 id="ibm-kubernetes-service-iks">IBM Kubernetes Service (IKS)</h3>
+<ul>
+<li>Very simply to create your first kubernetes cluster</li>
+<li>Understand how to use persistent storage on IKS with different offering. </li>
+<li>How to use Cloud Object Storage (COS) as persistent volume and integration with IKS</li>
+</ul>
+<h3 id="security">Security</h3>
+<ul>
+<li>Capability to create and manage certificates with IBM Cloud offering : IBM Certificat Manager, IBM Cloud Internet Service, IBM Cloud Domain Name Service</li>
+<li>Vulnarability in the docker images. IBM Cloud platform provide the capability to check the vulnerability of an image. Each vulnarability is notified in the image registry dashboard</li>
+</ul>
+<h3 id="drupal">Drupal</h3>
+<ul>
+<li>Need to understand how Drupal ecosystem works: requirement, customisation and tools to manage it (drush)</li>
+<li>Using compose to create the docker image.</li>
+</ul>
+<h3 id="continious-delivery-toolchain">Continious delivery Toolchain</h3>
+<ul>
+<li>Using toolchain to create a delivery pipeline to create and deploy image </li>
+<li>Add Github update event to start the delivery pipeline</li>
+<li>Use Slack to be notified for delivery pipeline exection and status.</li>
 </ul></div>
         </div>
 
